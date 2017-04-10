@@ -19,9 +19,10 @@ def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 def showImage(_title, img, _waittime=0, _writeToFile=1):
-    print 'showImage called'
+    
 
     if toShowOutput:
+        print 'showImage called'
         cv2.imshow(_title, img)
         if not _waittime:
             cv2.waitKey(0)
@@ -39,12 +40,12 @@ class FindDimensions():
         self.imageRear = image2
         self.imageTop = imageTop
 
-        print "imageFront: ",self.imageFront
-        print "imageRear: ",self.imageRear
-        print "imageTop: ",self.imageTop
+        # print "imageFront: ",self.imageFront
+        # print "imageRear: ",self.imageRear
+        # print "imageTop: ",self.imageTop
 
-        h,w = self.findRectHW(self.imageFront)
-        print "imageFront - Height: {:.1f}mm Width: {:.1f}mm".format(h,w)
+        hf,wf = self.findRectHW(self.imageFront)
+        print "imageFront - Height: {:.1f}mm Width: {:.1f}mm".format(hf,wf)
 
         hr,wr = self.findRectHW(self.imageRear)
         print "imageRear - Height: {:.1f}mm Width: {:.1f}mm".format(hr,wr)
@@ -211,7 +212,7 @@ class FindDimensions():
         _count = 0
         for c in cnts:
             # if the contour is not sufficiently large, ignore it
-            if cv2.contourArea(c) < 700:
+            if cv2.contourArea(c) < 200:
                 continue
 
             # compute the rotated bounding box of the contour
@@ -286,6 +287,27 @@ class FindDimensions():
 
         return dimA, dimB
 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # #  find colors  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+class FindColors():
+    def __init__(self, image1, image2): #only back and front size color 
+        self.imageFront = image1
+        self.imageRear = image2
+
+        image = cv2.imread(self.imageFront)
+        gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        # retVal, threshold = cv2.threshold(gray,125,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        #IMPORTANT:
+        threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+
+        showImage('adaptiveThreshold',threshold)
+        
+    def FindFrontColor(self,config):
+        return [55,66,77] #BGR values
+
+    def FindRearColor(self,config):
+        return [99,89,79] #BGR values
+    
+   
 
 # construct the argument parse and parse the arguments
 
@@ -307,3 +329,4 @@ if __name__ == '__main__':
     if args['showOutput'] == 'yes':
         toShowOutput = True
     dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
+    # clr = FindColors(args['imageFront'],args['imageRear'])
