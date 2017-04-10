@@ -1,0 +1,1 @@
+# opencv_3_side_object_dimension
