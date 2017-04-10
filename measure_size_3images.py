@@ -13,20 +13,22 @@ import imutils
 import cv2
 
 
+toShowOutput = False
+
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 def showImage(_title, img, _waittime=0, _writeToFile=1):
-    # cv2.imshow(_title, img)
-    print 'display image called'
-    # """
-    if not _waittime:
-        cv2.waitKey(0)
-    else:
-        cv2.waitKey(_waittime)
-    if _writeToFile:
-        writeImage(_title+'.png',img)
-    # """
+    print 'showImage called'
+
+    if toShowOutput:
+        cv2.imshow(_title, img)
+        if not _waittime:
+            cv2.waitKey(0)
+        else:
+            cv2.waitKey(_waittime)
+        if _writeToFile:
+            writeImage(_title+'.png',img)
 
 def writeImage(_title, img):
     cv2.imwrite(_title, img)
@@ -158,8 +160,7 @@ class FindDimensions():
                         0.65, (255, 255, 255), 2)
 
             # show the output image
-            # cv2.imshow("Image", orig)
-            # cv2.waitKey(0)
+            showImage("Image",orig);
 
         return dimA, dimB
         
@@ -281,8 +282,7 @@ class FindDimensions():
                         0.65, (255, 255, 255), 2)
 
             # show the output image
-            # cv2.imshow("Image", orig)
-            # cv2.waitKey(0)
+            showImage("Image",orig);
 
         return dimA, dimB
 
@@ -298,9 +298,12 @@ if __name__ == '__main__':
     ap.add_argument("-if", "--imageFront", required=True, help="path to the front input image")
     ap.add_argument("-ir", "--imageRear", required=True, help="path to the rear input image")
     ap.add_argument("-it", "--imageTop", required=True, help="path to the top input image")
+    ap.add_argument("-o", "--showOutput", required=False, help="choice yes/no if output to watch")
     ap.add_argument("-w", "--width", type=float, required=True, help="width of the left-most object in the image (in inches)")
     args = vars(ap.parse_args())
     # print args
 
     #TODO: Validation Check
+    if args['showOutput'] == 'yes':
+        toShowOutput = True
     dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
