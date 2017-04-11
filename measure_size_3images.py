@@ -31,6 +31,11 @@ def showImage(_title, img, _waittime=0, _writeToFile=1):
         if _writeToFile:
             writeImage(_title+'.png',img)
 
+def readInGrayScale(imgPath,lmt_low=70, lmt_high=255):
+    img = cv2.imread(imgPath, cv2.CV_LOAD_IMAGE_GRAYSCALE)
+    img = cv2.inRange(img, lmt_low, lmt_high)
+    return img
+
 def writeImage(_title, img):
     cv2.imwrite(_title, img)
 
@@ -359,5 +364,5 @@ if __name__ == '__main__':
     #TODO: Validation Check
     if args['showOutput'] == 'yes':
         toShowOutput = True
-    # dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
-    clr = FindColors(args['imageFront'],args['imageRear'])
+    dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
+    # clr = FindColors(args['imageFront'],args['imageRear'])
