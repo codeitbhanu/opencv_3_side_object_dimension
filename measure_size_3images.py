@@ -20,7 +20,7 @@ def midpoint(ptA, ptB):
 
 def showImage(_title, img, _waittime=0, _writeToFile=1):
     
-
+    toShowOutput = 1
     if toShowOutput:
         print 'showImage called'
         cv2.imshow(_title, img)
@@ -287,24 +287,55 @@ class FindDimensions():
 
         return dimA, dimB
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # #  find colors  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # #  find colors  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 class FindColors():
     def __init__(self, image1, image2): #only back and front size color 
         self.imageFront = image1
         self.imageRear = image2
+        self.defaultConfig = 0
 
-        image = cv2.imread(self.imageFront)
-        gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-        # retVal, threshold = cv2.threshold(gray,125,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-        #IMPORTANT:
-        threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
-
-        showImage('adaptiveThreshold',threshold)
+        self.findFrontColor(self.imageFront, self.defaultConfig)
+        #IMPORTANT Book Text Detector:
+        # image = cv2.imread(self.imageFront)
+        # gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+        ## retVal, threshold = cv2.threshold(gray,125,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        #threshold = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 115, 1)
+        #showImage('adaptiveThreshold',threshold)
         
-    def FindFrontColor(self,config):
-        return [55,66,77] #BGR values
+    def findFrontColor(self,img,config=0):
+        # load the image
+        image = cv2.imread(img)
+        res = cv2.GaussianBlur(image,(15,15),0)
+        # showImage('Gaussion Blur',res)
+        res = cv2.medianBlur(res,15)
+        res = cv2.dilate(res, None, iterations=5)
+        image = res
 
-    def FindRearColor(self,config):
+        # define the list of boundaries
+        boundaries = [
+            ([56, 66, 94], [171, 201, 218])
+            # ([86, 31, 4], [220, 88, 50]),
+            # ([25, 146, 190], [62, 174, 250]),
+            # ([103, 86, 65], [145, 133, 128])
+        ]
+
+        # loop over the boundaries
+        for (lower, upper) in boundaries:
+            # create NumPy arrays from the boundaries
+            lower = np.array(lower, dtype = "uint8")
+            upper = np.array(upper, dtype = "uint8")
+
+            # find the colors within the specified boundaries and apply
+            # the mask
+            mask = cv2.inRange(image, lower, upper)
+            output = cv2.bitwise_and(image, image, mask = mask)
+
+            # show the images
+            cv2.imshow("images", np.hstack([image, output]))
+            cv2.waitKey(0)
+            return [55,66,77] #BGR values
+
+    def findRearColor(self,img,config=0):
         return [99,89,79] #BGR values
     
    
@@ -317,16 +348,16 @@ if __name__ == '__main__':
     # For Loop 3 Camera Run
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("-if", "--imageFront", required=True, help="path to the front input image")
-    ap.add_argument("-ir", "--imageRear", required=True, help="path to the rear input image")
-    ap.add_argument("-it", "--imageTop", required=True, help="path to the top input image")
+    ap.add_argument("-if", "--imageFront", required=False, help="path to the front input image")
+    ap.add_argument("-ir", "--imageRear", required=False, help="path to the rear input image")
+    ap.add_argument("-it", "--imageTop", required=False, help="path to the top input image")
     ap.add_argument("-o", "--showOutput", required=False, help="choice yes/no if output to watch")
-    ap.add_argument("-w", "--width", type=float, required=True, help="width of the left-most object in the image (in inches)")
+    ap.add_argument("-w", "--width", type=float, required=False, help="width of the left-most object in the image (in inches)")
     args = vars(ap.parse_args())
     # print args
 
     #TODO: Validation Check
     if args['showOutput'] == 'yes':
         toShowOutput = True
-    dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
-    # clr = FindColors(args['imageFront'],args['imageRear'])
+    # dim = FindDimensions(args['imageFront'],args['imageRear'],args['imageTop'])
+    clr = FindColors(args['imageFront'],args['imageRear'])
