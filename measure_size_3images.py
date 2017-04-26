@@ -359,13 +359,13 @@ if __name__ == '__main__':
     # print args
 
     # TODO: Validation Check
+    # toShowOutput = True
     if args['showOutput'] == 'yes':
         toShowOutput = True
-    # dim = FindDimensions(args['imageFront'], args['imageRear'], args['imageTop'])
-    # clr = FindColors(args['imageFront'],args['imageRear'])
+    dim = FindDimensions(args['imageFront'], args['imageRear'], args['imageTop'])
+    clr = FindColors(args['imageFront'],args['imageRear'])
     
     #init
-    toShowOutput = True
     
     img = cv2.imread(args['imageFront'])
     inv_img = util_invert_image(img)
