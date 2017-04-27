@@ -71,20 +71,29 @@ def find_biggest_contour(image):
     contours, hierarchy = cv2.findContours(
         image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Isolate largest contour
-    contour_sizes = [(cv2.contourArea(contour), contour)
+    # Isolate largest contour For Biscuit
+    bisc_contour_sizes = [(cv2.contourArea(contour), contour)
                      for contour in contours]
 
-    if not contour_sizes:
+    if not bisc_contour_sizes:
         return None, image
 
-    biggest_contour = max(contour_sizes, key=lambda x: x[0])[1]
+    # Isolate largest contour For Ref Object
+    ref_obj_contour_sizes = [(cv2.contourArea(contour), contour)
+                     for contour in contours]
+
+    if not ref_obj_contour_sizes:
+        return None, image
+
+    biggest_contour = max(bisc_contour_sizes, key=lambda x: x[0])[1]
+    second_biggest_contour = max(ref_obj_contour_sizes, key=lambda x: x[0])[1]
 
     mask = np.zeros(image.shape, np.uint8)
     # cv2.drawContours(mask, [biggest_contour], -1, 255, -1) #wanted rotated
     # box around biscuit
     cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
-    return biggest_contour, mask
+    cv2.drawContours(mask, [second_biggest_contour], 0, (0, 0, 255), 2)
+    return biggest_contour,second_biggest_contour,mask
 
 
 def circle_contour(image, contour):
@@ -178,7 +187,7 @@ def process(image):
     mask_clean = cv2.morphologyEx(mask_closed, cv2.MORPH_OPEN, kernel)
 
     # Find biggest biscuit
-    big_biscuit_contour, mask_biscuit = find_biggest_contour(
+    big_biscuit_contour, ref_obj_contour, mask_biscuit  = find_biggest_contour(
         mask_clean)
 
     # Overlay cleaned mask on image
@@ -186,13 +195,15 @@ def process(image):
 
     # Circle biggest biscuit
     # circled = circle_contour(overlay, big_biscuit_contour)
-    rectangled = rectangle_contour(overlay, big_biscuit_contour)
+    bisc_rectangled = rectangle_contour(overlay, big_biscuit_contour)
+    ref_obj_rectangled = rectangle_contour(overlay, ref_obj_contour)
 
     # Finally convert back to BGR to display
-    bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
+    bisc_bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
+    ref_obj_bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
     # bgr = cv2.cvtColor(circled, cv2.COLOR_RGB2BGR)
 
-    return bgr
+    return bgr1, bgr2
 
 
 def onChangeH1(x):
@@ -226,13 +237,14 @@ def onChangeV2(x):
 
 
 def main():
+    """
     # Load video
     video = cv2.VideoCapture(2)
 
     if not video.isOpened():
         video.release()
         raise RuntimeError('Video not open')
-
+    """
     cv2.namedWindow("Video")
     # create trackbars for color change
     cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
@@ -245,14 +257,16 @@ def main():
 
     firstCapture = True
     while True:
-        f, img = video.read()
-        # f = True
-        # img = cv2.imread('bisc.jpg')
+        # f, img = video.read()
+        f = True
+        # img = cv2.imread('bisc.jpg')    
+        img = cv2.imread('bisc2.jpg')    
 
+        """
         if firstCapture:
             firstCapture = False
             cv2.imwrite('bisc.jpg',img)
-
+        """
         result = process(img)
 
         cv2.imshow('Video', result)
