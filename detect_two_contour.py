@@ -4,10 +4,26 @@ from cv2 import cv
 from imutils import perspective
 import imutils
 
-def rectangle_contour(image, contour):
+
+def rotateImage(image, angle):
+    image
+    image_center = tuple(np.array(image.shape) / 2)
+    print'image_center: ',image_center
+    image_center = (image_center[0],image_center[1])
+    print'now image_center: ',image_center
+    rot_mat = cv2.getRotationMatrix2D(image_center,angle,1)
+    result = cv2.warpAffine(image, rot_mat, image.shape,flags=cv2.INTER_LINEAR)
+    return result
+
+def rectangle_contour(image, contour, toFill):
     
     if contour is None:
         return image
+
+    if toFill is True:
+        toFill = -1
+    else:
+        toFill = 2
 
     # Bounding rectangle
     image_with_rect = image.copy()
@@ -29,12 +45,12 @@ def rectangle_contour(image, contour):
     # order, then draw the outline of the rotated bounding
     # box
     box = perspective.order_points(box)
-    cv2.drawContours(image_with_rect, [box.astype("int")], -1, (0, 255, 0), 1)
+    cv2.drawContours(image_with_rect, [box.astype("int")], -1, (0, 0, 255), toFill)
     return image_with_rect
 
 
-
-im = cv2.imread('/home/bhanu/projects/opencv/with_camera/two_contour_detection/bisc2.jpg')
+'''/home/bhanu/projects/opencv/with_camera/two_contour_detection/'''
+im = cv2.imread('bisc2.jpg')
 im_ycrcb = cv2.cvtColor(im, cv2.COLOR_BGR2HSV)
 
 ball_ycrcb_mint = np.array([0, 90, 100], np.uint8)
@@ -54,14 +70,33 @@ for i, c in enumerate(contours):
 
 # first sort the array by area
 sorteddata = sorted(zip(areaArray, contours), key=lambda x: x[0], reverse=True)
-
+print "Number of Found Contours: ",len(sorteddata)    # 3 rows in your example
 # find the nth largest contour [n-1][1], in this case 2
-secondlargestcontour = sorteddata[1][1]
+secondLargestContour = sorteddata[1][1]
+print(np.matrix(secondLargestContour))
+
 
 # draw it
-x, y, w, h = cv2.boundingRect(secondlargestcontour)
-cv2.drawContours(im, secondlargestcontour, -1, (255, 0, 0), 2)
-cv2.rectangle(im, (x, y), (x + w, y + h), (255, 255, 255), -1)
+"""
+x, y, w, h = cv2.boundingRect(secondLargestContour)
+cv2.drawContours(im, secondLargestContour, -1, (0, 0, 255), 2)
+cv2.rectangle(im, (x, y), (x + w, y + h), (255, 0, 0), -1)
+"""
+# im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+im = rectangle_contour(im, secondLargestContour, True)
+# im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
-# rectangle_contour(im, secondlargestcontour)
-cv2.imwrite('/home/bhanu/projects/opencv/with_camera/two_contour_detection/output.jpg', im)
+
+# Now create a mask of logo and create its inverse mask also
+img_gray = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
+cv2.imshow('output.jpg',img_gray)
+cv2.waitKey(0)
+"""
+img_rgb(img_gray.size(), CV_8UC3);
+
+
+  // convert grayscale to color image
+  cv::cvtColor(img_gray, img_rgb, CV_GRAY2RGB);
+"""
+im = imutils.rotate(img_gray, -45)
+cv2.imwrite('output.jpg', im)
