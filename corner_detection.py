@@ -21,3 +21,4 @@ for p in box:
     cv2.circle(im, pt, 5, (200, 0, 0), 2)
 cv2.imshow("wood", im)
 cv2.waitKey()
+l
