@@ -6,8 +6,8 @@ from util_network import get_local_ip_address
 def application(request):
     return Response('Hello Werkzeug !!')
 
-def run_server(port=4000):
-    server_ip = get_local_ip_address('enp0s26u1u1')
+def run_server(intf, port=4000):
+    server_ip = get_local_ip_address(intf)
     from werkzeug.serving import run_simple
     run_simple(server_ip, port, application)
 

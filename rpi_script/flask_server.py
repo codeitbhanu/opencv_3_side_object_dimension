@@ -9,12 +9,6 @@ def application():
     return 'Hello Flasdfssdfdsffdsk !!!'
 app.add_url_rule('/',__app_name__,application)
 
-
-active_opt = 0
-def run_server(port=5000):
-    server_ip = get_local_ip_address('enp0s26u1u1')    
-    app.run(server_ip,port,debug=True)
-
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 @app.route('/success/<name>')
 def success(name):
@@ -29,5 +23,13 @@ def login():
       user = request.args.get('nm')
       return redirect(url_for('success',name = user))
 
+active_opt = 0
+def run_server(intf, port=5000):
+    server_ip = get_local_ip_address(intf)    
+    app.run(server_ip,port,debug=True)
+
+
+"""
 if __name__ == '__main__':
    app.run(debug = True)
+"""
