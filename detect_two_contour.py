@@ -61,7 +61,7 @@ def rectangle_contour(image, contour, toFill=True, colorFill=green):
 
 
 '''/home/bhanu/projects/opencv/with_camera/two_contour_detection/'''
-im = cv2.imread('bisc3.jpg')
+im = cv2.imread('if.jpg')
 
 img_orig = im.copy()
 
@@ -113,7 +113,7 @@ im = cv2.bitwise_and(im,im,mask=mask)
 # cv2.waitKey(0)
 #########################################################
 # im = imutils.rotate(im, -45)
-cv2.imshow('Original',img_orig)
+# cv2.imshow('Original',img_orig)
 cv2.imshow('Extracted Second Biggest Contour',im)
 cv2.waitKey(0)
 cv2.imwrite('output.jpg', im)

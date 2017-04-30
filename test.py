@@ -1,38 +1,139 @@
+
+from __future__ import division
 import cv2
+import numpy as np
+from imutils import perspective
+import imutils
 
-# Camera 0 is the integrated web cam on my netbook
-camera_port = 1
+glob_h1 = 10
+glob_h2 = 230
 
-# Number of frames to throw away while the camera adjusts to light levels
-ramp_frames = 30
+glob_s1 = 10
+glob_s2 = 150
 
-# Now we can initialize the camera capture object with the cv2.VideoCapture class.
-# All it needs is the index to a camera port.
-camera = cv2.VideoCapture(camera_port)
+glob_v1 = 44
+glob_v2 = 250
 
-# Captures a single image from the camera and returns it in PIL format
+low_brown = (10,10,44)
+brown = (230,150,250)
+
+def process(image):
+    
+    global glob_h1
+    global glob_h2
+    global glob_s1
+    global glob_s2
+    global glob_v1
+    global glob_v2
+
+    image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    # Blur
+    # image_blur = cv2.GaussianBlur(image, (7, 7), 0)
+    image_blur_hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+
+    # Filter by colour
+    # 0-10 hue                 H,  S,   V
+    mask = cv2.inRange(image_blur_hsv, low_brown, brown)
+    image = cv2.bitwise_and(image_blur_hsv,image_blur_hsv,mask=mask)
+    # cv2.drawContours(im, secondLargestContour, -1, 255, -1)
+
+    image = cv2.cvtColor(image, cv2.COLOR_HSV2RGB)
+    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+    return image
+
+def onChangeH1(x):
+    global glob_h1
+    glob_h1 = x
 
 
-def get_image():
-    # read is the easiest way to get a full image out of a VideoCapture object.
-    retval, im = camera.read()
-    return im
+def onChangeS1(x):
+    global glob_s1
+    glob_s1 = x
 
 
-# Ramp the camera - these frames will be discarded and are only used to allow v4l2
-# to adjust light levels, if necessary
-for i in xrange(ramp_frames):
-    temp = get_image()
-print("Taking image...")
-# Take the actual image we want to keep
-camera_capture = get_image()
-file = "cameraOut_image.png"
-# A nice feature of the imwrite method is that it will automatically choose the
-# correct format based on the file extension you provide. Convenient!
-cv2.imwrite(file, camera_capture)
+def onChangeV1(x):
+    global glob_v1
+    glob_v1 = x
 
-# You'll want to release the camera, otherwise you won't be able to create a new
-# capture object until your script exits
-# del(camera)
-camera.release()
-cv2.destroyAllWindows()
+
+def onChangeH2(x):
+    global glob_h2
+    glob_h2 = x
+
+
+def onChangeS2(x):
+    global glob_s2
+    glob_s2 = x
+
+
+def onChangeV2(x):
+    global glob_v2
+    glob_v2 = x
+
+
+
+
+# im = cv2.imread('if.jpg')    
+# im = process(im)
+# cv2.imshow('Result',im)
+# cv2.waitKey(0)
+
+
+
+enabled_tracker = False
+def main():
+    """
+    # Load video
+    video = cv2.VideoCapture(2)
+
+    if not video.isOpened():
+        video.release()
+        raise RuntimeError('Video not open')
+    """
+    cv2.namedWindow("Video")
+    # create trackbars for color change
+    if enabled_tracker:
+        cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
+        cv2.createTrackbar('S1', 'Video', glob_s1, 256, onChangeS1)
+        cv2.createTrackbar('V1', 'Video', glob_v1, 256, onChangeV1)
+
+        cv2.createTrackbar('H2', 'Video', glob_h2, 359, onChangeH2)
+        cv2.createTrackbar('S2', 'Video', glob_s2, 256, onChangeS2)
+        cv2.createTrackbar('V2', 'Video', glob_v2, 256, onChangeV2)
+    
+
+    firstCapture = True
+    while True:
+        # f, img = video.read()
+        f = True
+        # img = cv2.imread('bisc.jpg')    
+        img = cv2.imread('if.jpg')    
+
+        """
+        if firstCapture:
+            firstCapture = False
+            cv2.imwrite('bisc.jpg',img)
+        """
+        result = process(img)
+
+        # result = rotateImage(result,-45)
+        cv2.imshow('Video', result)
+
+        # Wait for 1ms
+        key = cv2.waitKey(1) & 0xFF
+
+        # Press escape to exit
+        if key == 27:
+            return
+
+        # Reached end of video
+        if not f:
+            return
+
+
+if __name__ == '__main__':
+    main()

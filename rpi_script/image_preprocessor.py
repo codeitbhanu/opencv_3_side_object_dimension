@@ -1,68 +1,35 @@
+
 from __future__ import division
 import cv2
 import numpy as np
 from imutils import perspective
 import imutils
 
-green = (0, 255, 0)
-
-##################### tracker logic #####################
-# import cv2
-# import numpy as np
-
 glob_h1 = 10
 glob_h2 = 230
-  
+
 glob_s1 = 10
-glob_s2 = 120
+glob_s2 = 150
 
 glob_v1 = 44
 glob_v2 = 250
-"""
 
-def nothing(x):
-    pass
-
-
-# Create a black image, a window
-img = np.zeros((300, 512, 3), np.uint8)
-cv2.namedWindow('image')
-
-# create trackbars for color change
-cv2.createTrackbar('R', 'image', 0, 255, nothing)
-cv2.createTrackbar('G', 'image', 0, 255, nothing)
-cv2.createTrackbar('B', 'image', 0, 255, nothing)
-
-# create switch for ON/OFF functionality
-switch = '0 : OFF \n1 : ON'
-cv2.createTrackbar(switch, 'image', 0, 1, nothing)
-
-while(1):
-    cv2.imshow('image', img)
-    k = cv2.waitKey(1) & 0xFF
-    if k == 27:
-        break
-
-    # get current positions of four trackbars
-    r = cv2.getTrackbarPos('R', 'image')
-    g = cv2.getTrackbarPos('G', 'image')
-    b = cv2.getTrackbarPos('B', 'image')
-    s = cv2.getTrackbarPos(switch, 'image')
-
-    if s == 0:
-        img[:] = 0
-    else:
-        img[:] = [b, g, r]
-
-cv2.destroyAllWindows()"""
-##################### tracker logic #####################
+def rotateImage(image, angle):
+    image
+    image_center = tuple(np.array(image.shape) / 2)
+    # print'image_center: ', image_center
+    image_center = (image_center[0], image_center[1])
+    # print'now image_center: ', image_center
+    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1)
+    result = cv2.warpAffine(image, rot_mat, image.shape,
+                            flags=cv2.INTER_LINEAR)
+    return result
 
 
 def overlay_mask(mask, image):
     rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
     img = cv2.addWeighted(rgb_mask, 0.5, image, 0.5, 0)
     return img
-
 
 def find_biggest_contour(image):
 
@@ -86,21 +53,8 @@ def find_biggest_contour(image):
     cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
     return biggest_contour, mask
 
-
-def circle_contour(image, contour):
-
-    if contour is None:
-        return image
-
-    # Bounding ellipse
-    image_with_ellipse = image.copy()
-    ellipse = cv2.fitEllipse(contour)
-    cv2.ellipse(image_with_ellipse, ellipse, green, 2, cv2.CV_AA)
-    return image_with_ellipse
-
-
 def rectangle_contour(image, contour):
-
+    
     if contour is None:
         return image
 
@@ -129,7 +83,7 @@ def rectangle_contour(image, contour):
 
 
 def process(image):
-
+    
     global glob_h1
     global glob_h2
     global glob_s1
@@ -144,19 +98,6 @@ def process(image):
     # Blur
     image_blur = cv2.GaussianBlur(image, (7, 7), 0)
     image_blur_hsv = cv2.cvtColor(image_blur, cv2.COLOR_RGB2HSV)
-
-    """
-    # 0-10 hue
-    min_red = np.array([0, 100, 80])
-    max_red = np.array([20, 256, 256])
-    mask1 = cv2.inRange(image_blur_hsv, min_red, max_red)
-
-    # 170-180 hue
-    min_red2 = np.array([170, 100, 80])
-    max_red2 = np.array([190, 256, 256])
-    mask2 = cv2.inRange(image_blur_hsv, min_red2, max_red2)
-
-    """
 
     # Filter by colour
     # 0-10 hue                 H,  S,   V
@@ -176,24 +117,7 @@ def process(image):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
     mask_closed = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     mask_clean = cv2.morphologyEx(mask_closed, cv2.MORPH_OPEN, kernel)
-
-    # Find biggest biscuit
-    big_biscuit_contour, mask_biscuit = find_biggest_contour(
-        mask_clean)
-
-    # Overlay cleaned mask on image
-    overlay = overlay_mask(mask_clean, image)
-
-    # Circle biggest biscuit
-    # circled = circle_contour(overlay, big_biscuit_contour)
-    rectangled = rectangle_contour(overlay, big_biscuit_contour)
-
-    # Finally convert back to BGR to display
-    bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
-    # bgr = cv2.cvtColor(circled, cv2.COLOR_RGB2BGR)
-
-    return bgr
-
+    return mask_clean
 
 def onChangeH1(x):
     global glob_h1
@@ -224,7 +148,7 @@ def onChangeV2(x):
     global glob_v2
     glob_v2 = x
 
-enabled_tracker = True
+enabled_tracker = False
 def main():
     """
     # Load video
@@ -251,7 +175,7 @@ def main():
         # f, img = video.read()
         f = True
         # img = cv2.imread('bisc.jpg')    
-        img = cv2.imread('it.jpg')    
+        img = cv2.imread('if.jpg')    
 
         """
         if firstCapture:
@@ -260,6 +184,7 @@ def main():
         """
         result = process(img)
 
+        # result = rotateImage(result,-45)
         cv2.imshow('Video', result)
 
         # Wait for 1ms
@@ -276,3 +201,12 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+def run(img_path,image_type):
+    img = cv2.imread(img_path)    
+    result = process(img)
+    if image_type == 'front':
+        result = rotateImage(result,-45)
+    return result

@@ -13,8 +13,4 @@ def get_whl(img_dict):
             'h':h,
             'l':l}
     
-    print ret
-
-    return {  'w':'33',
-            'h':'88',
-            'l':'78'}
+    return ret

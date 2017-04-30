@@ -353,21 +353,21 @@ if __name__ == '__main__':
                     help="path to the top input image")
     ap.add_argument("-o", "--showOutput", required=False,
                     help="choice yes/no if output to watch")
-    ap.add_argument("-w", "--width", type=float, required=False,
+    ap.add_argument("-w", "--width", type=float, required=True,
                     help="width of the left-most object in the image (in inches)")
     args = vars(ap.parse_args())
     # print args
 
     # TODO: Validation Check
-    # toShowOutput = True
+    toShowOutput = True
     if args['showOutput'] == 'yes':
         toShowOutput = True
     dim = FindDimensions(args['imageFront'], args['imageRear'], args['imageTop'])
-    clr = FindColors(args['imageFront'],args['imageRear'])
+    # clr = FindColors(args['imageFront'],args['imageRear'])
     
     #init
     
-    img = cv2.imread(args['imageFront'])
-    inv_img = util_invert_image(img)
-    util_show_image('inverted',inv_img)
+    # img = cv2.imread(args['imageFront'])
+    # inv_img = util_invert_image(img)
+    # util_show_image('inverted',inv_img)
     
