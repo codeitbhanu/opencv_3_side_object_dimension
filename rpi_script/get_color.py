@@ -5,6 +5,7 @@ import numpy as np
 from imutils import perspective
 import imutils
 from PIL import Image
+from disable_enable_print import *
 
 from scipy.ndimage import median_filter
 
@@ -221,7 +222,7 @@ def fill_black_with_white(data):
 def get_color_code(image):
     average_color_per_row = np.average(image, axis=0)
     average_color = np.average(average_color_per_row, axis=0)
-    # print(average_color)
+    print "get_color_code: Average Colro: ",average_color
     average_color = np.uint8(average_color)
     average_color_img = np.array([[average_color]*100]*100, np.uint8)
     # print(average_color_img)
@@ -232,18 +233,10 @@ def get_color_code(image):
 
 
 enabled_tracker = False
-def main():
-    """
-    # Load video
-    video = cv2.VideoCapture(2)
-
-    if not video.isOpened():
-        video.release()
-        raise RuntimeError('Video not open')
-    """
-    cv2.namedWindow("Video")
+def find_color(img_path, clr_profile=0):
     # create trackbars for color change
     if enabled_tracker:
+        cv2.namedWindow("Video")
         cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
         cv2.createTrackbar('S1', 'Video', glob_s1, 256, onChangeS1)
         cv2.createTrackbar('V1', 'Video', glob_v1, 256, onChangeV1)
@@ -255,17 +248,13 @@ def main():
 
     firstCapture = True
     while firstCapture:
-        firstCapture = True
+        firstCapture = False
         # f, img = video.read()
         f = True
         # img = cv2.imread('bisc.jpg')    
-        img = cv2.imread('if.jpg')    
+        img = cv2.imread(img_path)    
         img_orig = img.copy()
-        """
-        if firstCapture:
-            firstCapture = False
-            cv2.imwrite('bisc.jpg',img)
-        """
+
         _,mask_clean,box = process(img)
         mask_clean = rotateImage(mask_clean,-45)
         # mask_clean = cv2.dilate(mask_clean, None, iterations=2)
@@ -292,22 +281,16 @@ def main():
                 new_img=result[y:y+h,x:x+w]
                 # cv2.imwrite('front'+str(idx) + '.png', new_img)
         result = new_img
-        ################################################
-        """
-        x, y, width, height = cv2.boundingRect(big_contour)
-        print "X: ",x, " Y: ",y, " Width: ",width, "Height: ",height
-        result = img_resized[y+height:y+height*2, x+width:x+width*2]
-        # result = rotateImage(result,-45)
-        ################################################
-        """
+
         height, width, depth = result.shape
         print "Height: ",height, " Width: ",width, " Depth: ",depth
-        clr_profile = 0
+
+        # TODO: To Add More Color Picking Profile Support
+        b = g = r = 0
         if clr_profile == 0:
-            print "Mean Color: ",get_color_code(result)
-
-
+            b,g,r = get_color_code(result)
         
+        """
         cv2.imshow('Video', result)
 
         # Wait for 1ms
@@ -320,16 +303,13 @@ def main():
         # Reached end of video
         if not f:
             return
+        """
+        return r,g,b
         
+# if __name__ == '__main__':
+#     main()
 
-
-if __name__ == '__main__':
-    main()
-
-
-def run(img_path,image_type):
-    img = cv2.imread(img_path)    
-    result = process(img)
-    if image_type == 'front':
-        result = rotateImage(result,-45)
-    return result
+def get(img_path, clr_profile=0):
+    enable_print()
+    print "This is...",__name__
+    return find_color(img_path, clr_profile)
