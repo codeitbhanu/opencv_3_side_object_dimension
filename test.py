@@ -5,17 +5,122 @@ import numpy as np
 from imutils import perspective
 import imutils
 
+from scipy.ndimage import median_filter
+
+blue = (255, 0, 0)
+green = (0, 255, 0)
+low_green = (0, 254, 0)
+red = (0, 0, 255)
+low_red = (0, 0, 254)
+# high_red = (0, 0, 255)
+black = (0, 0, 0)
+white = (255,255,255)
+
 glob_h1 = 10
-glob_h2 = 230
+glob_h2 = 80
 
 glob_s1 = 10
-glob_s2 = 150
+glob_s2 = 120
 
-glob_v1 = 44
-glob_v2 = 250
+glob_v1 = 0
+glob_v2 = 150
 
-low_brown = (10,10,44)
-brown = (230,150,250)
+def rotateImage(image, angle):
+    from scipy import ndimage
+    return ndimage.rotate(image, angle, reshape=False)
+
+def util_invert_image(img):
+    return cv2.bitwise_not(img)
+
+def util_write_image(_title, img):
+    cv2.imwrite(_title, img)
+
+toShowOutput = True
+def util_show_image(_title, img, _waittime=0, _writeToFile=1):
+    
+    # toShowOutput = 1
+    if toShowOutput:
+        print 'util_show_image called'
+        cv2.imshow(_title, img)
+        if not _waittime:
+            cv2.waitKey(0)
+        else:
+            cv2.waitKey(_waittime)
+        if _writeToFile:
+            util_write_image(_title + '.png', img)
+
+def overlay_mask(mask, image):
+    rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
+    img = cv2.addWeighted(rgb_mask, 0.5, image, 0.5, 0)
+    return img
+
+def find_biggest_contour(image):
+    
+    # Copy
+    image = image.copy()
+    contours, hierarchy = cv2.findContours(
+        image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+    # Isolate largest contour
+    contour_sizes = [(cv2.contourArea(contour), contour)
+                     for contour in contours]
+
+    if not contour_sizes:
+        return None, image
+
+    biggest_contour = max(contour_sizes, key=lambda x: x[0])[1]
+
+    mask = np.zeros(image.shape, np.uint8)
+    # cv2.drawContours(mask, [biggest_contour], -1, 255, -1) #wanted rotated
+    # box around biscuit
+    cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
+    # cv2.imshow('biggest_contour',biggest_contour)
+    # cv2.waitKey(0)
+    return biggest_contour, mask
+    
+def rectangle_contour(image, contour, toFill=True, colorFill=green):
+    
+    if contour is None:
+        return image
+
+    if toFill is True:
+        toFill = -1
+    else:
+        toFill = 2
+
+    # Bounding rectangle
+    image_with_rect = image.copy()
+    """ # OLD LOGIC RECT NON-ROTATING
+    # rect = cv2.boundingRect(contour)
+
+    x, y, w, h = cv2.boundingRect(contour)
+    cv2.rectangle(image_with_rect, (x, y), (x + w, y + h), green, 2, cv2.CV_AA)
+    return image_with_rect
+    """
+    # compute the rotated bounding box of the contour
+        # image_with_rect = image.copy()
+    box = cv2.minAreaRect(contour)
+    box = cv2.cv.BoxPoints(box) if imutils.is_cv2() else cv2.boxPoints(box)
+    box = np.array(box, dtype="int")
+
+    # order the points in the contour such that they appear
+    # in top-left, top-right, bottom-right, and bottom-left
+    # order, then draw the outline of the rotated bounding
+    # box
+    box = perspective.order_points(box)
+
+
+    cv2.drawContours(image_with_rect, [
+                     box.astype("int")], -1, colorFill, toFill)
+
+    x, y, width, height = cv2.boundingRect(contour)
+    roi = image_with_rect[y:y+height, x:x+width]
+    rot_rotated = rotateImage(roi,-45)
+    # cv2.imwrite("roi.png", roi)
+    # cv2.imshow('rot_rotated',rot_rotated)
+    # cv2.waitKey(0)
+    return image_with_rect
+
 
 def process(image):
     
@@ -31,19 +136,61 @@ def process(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Blur
-    # image_blur = cv2.GaussianBlur(image, (7, 7), 0)
-    image_blur_hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    image_blur = cv2.GaussianBlur(image, (7, 7), 0)
+    image_blur_hsv = cv2.cvtColor(image_blur, cv2.COLOR_RGB2HSV)
+
+    """
+    # 0-10 hue
+    min_red = np.array([0, 100, 80])
+    max_red = np.array([20, 256, 256])
+    mask1 = cv2.inRange(image_blur_hsv, min_red, max_red)
+
+    # 170-180 hue
+    min_red2 = np.array([170, 100, 80])
+    max_red2 = np.array([190, 256, 256])
+    mask2 = cv2.inRange(image_blur_hsv, min_red2, max_red2)
+
+    """
 
     # Filter by colour
     # 0-10 hue                 H,  S,   V
-    mask = cv2.inRange(image_blur_hsv, low_brown, brown)
-    image = cv2.bitwise_and(image_blur_hsv,image_blur_hsv,mask=mask)
-    # cv2.drawContours(im, secondLargestContour, -1, 255, -1)
+    min_bisc_brown = np.array([glob_h1, glob_s1, glob_v1])
+    max_bisc_brown = np.array([glob_h2, glob_s2, glob_v2])
+    mask1 = cv2.inRange(image_blur_hsv, min_bisc_brown, max_bisc_brown)
 
-    image = cv2.cvtColor(image, cv2.COLOR_HSV2RGB)
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # 170-180 hue
+    min_bisc_brown2 = np.array([glob_h1 + 170, glob_s1, glob_v1])
+    max_bisc_brown2 = np.array([glob_h2 + 180, 256, 256])
+    mask2 = cv2.inRange(image_blur_hsv, min_bisc_brown2, max_bisc_brown2)
 
-    return image
+    # Combine masks
+    mask = mask1 + mask2
+
+    # Clean up
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
+    mask_closed = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
+    mask_clean = cv2.morphologyEx(mask_closed, cv2.MORPH_OPEN, kernel)
+
+    # Find biggest biscuit
+    big_biscuit_contour, mask_biscuit = find_biggest_contour(
+        mask_clean)
+
+    # Overlay cleaned mask on image
+    overlay = overlay_mask(mask_clean, image)
+
+    # Circle biggest biscuit
+    # circled = circle_contour(overlay, big_biscuit_contour)
+    rectangled = rectangle_contour(overlay, big_biscuit_contour)
+
+    # Finally convert back to BGR to display
+    bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
+    # bgr = cv2.cvtColor(circled, cv2.COLOR_RGB2BGR)
+
+    # return bgr
+
+    # cv2.imshow('bgr',bgr)
+    # cv2.waitKey(0)
+    return mask_closed,mask_clean,big_biscuit_contour
 
 def onChangeH1(x):
     global glob_h1
@@ -74,17 +221,23 @@ def onChangeV2(x):
     global glob_v2
     glob_v2 = x
 
+def fill_black_with_white(data):
+    data[np.where((data == [0,0,0]).all(axis = 2))] = [255,255,255]
+    return data
+
+def get_color_code(image):
+    average_color_per_row = np.average(image, axis=0)
+    average_color = np.average(average_color_per_row, axis=0)
+    print(average_color)
+    average_color = np.uint8(average_color)
+    average_color_img = np.array([[average_color]*100]*100, np.uint8)
+    print(average_color_img)
+    cv2.imwrite( "average_color.png", average_color_img )
+    cv2.imshow('average_color.png',average_color_img)
+    # cv2.waitKey(0)
 
 
-
-# im = cv2.imread('if.jpg')    
-# im = process(im)
-# cv2.imshow('Result',im)
-# cv2.waitKey(0)
-
-
-
-enabled_tracker = False
+enabled_tracker = True
 def main():
     """
     # Load video
@@ -112,15 +265,32 @@ def main():
         f = True
         # img = cv2.imread('bisc.jpg')    
         img = cv2.imread('if.jpg')    
-
+        img_orig = img.copy()
         """
         if firstCapture:
             firstCapture = False
             cv2.imwrite('bisc.jpg',img)
         """
-        result = process(img)
+        _,mask_clean,big_contour = process(img)
+        mask_clean = rotateImage(mask_clean,-45)
+        # mask_clean = cv2.dilate(mask_clean, None, iterations=2)
+        mask_clean = cv2.erode(mask_clean, None, iterations=2)
 
+        img_resized = cv2.resize(img_orig, None, fx=1 / 2, fy=1 / 2)
+        img_resized = rotateImage(img_resized,-45)
+
+        result = cv2.bitwise_and(img_resized,img_resized,mask = mask_clean)
+
+        height, width, depth = result.shape
+        # print "Height: ",height, " Width: ",width, " Depth: ",depth
+        result = fill_black_with_white(result)
+        # cv2.imshow('Video', result)
+
+        ################################################
+        x, y, width, height = cv2.boundingRect(big_contour)
+        result = result[y:y+height, x:x+width]
         # result = rotateImage(result,-45)
+        ################################################
         cv2.imshow('Video', result)
 
         # Wait for 1ms
@@ -135,5 +305,14 @@ def main():
             return
 
 
+
 if __name__ == '__main__':
     main()
+
+
+def run(img_path,image_type):
+    img = cv2.imread(img_path)    
+    result = process(img)
+    if image_type == 'front':
+        result = rotateImage(result,-45)
+    return result

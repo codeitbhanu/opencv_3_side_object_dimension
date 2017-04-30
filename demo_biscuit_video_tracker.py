@@ -84,6 +84,8 @@ def find_biggest_contour(image):
     # cv2.drawContours(mask, [biggest_contour], -1, 255, -1) #wanted rotated
     # box around biscuit
     cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
+    # cv2.imshow('biggest_contour',biggest_contour)
+    # cv2.waitKey(0)
     return biggest_contour, mask
 
 
@@ -183,6 +185,8 @@ def process(image):
 
     # Overlay cleaned mask on image
     overlay = overlay_mask(mask_clean, image)
+    cv2.imshow('overlay',overlay)
+    cv2.waitKey(0)
 
     # Circle biggest biscuit
     # circled = circle_contour(overlay, big_biscuit_contour)
