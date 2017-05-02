@@ -1,6 +1,7 @@
 import cv2
+from disable_enable_print import *
 
-capture_from_camera = True
+capture_from_camera = False
 
 laptop_capture = True
 
@@ -20,7 +21,7 @@ def start_cam(camera_port, file,ramp_frames = 30):
     temp = None
     for i in xrange(ramp_frames):
         temp = camera.read()[1]
-    print("Taking image...")
+    logging.debug ("Taking image...")
     # Take the actual image we want to keep
     camera_capture = temp
     
@@ -33,22 +34,23 @@ def start_cam(camera_port, file,ramp_frames = 30):
     del(camera)
 
 def capture_images():
+    logging.debug('capture_images called')
     image_path_dict_all = { camera_port_front:"",
                         camera_port_top:"",
                         camera_port_rear:""}
 
     for key in image_path_dict_all.keys():
-        print "reading: ",key
+        logging.debug ("reading: %s",key)
         if capture_from_camera:
-            image_path_dict_all[key] = images_local_folder_path + str(key) + '.jpg'
+            image_path_dict_all[key] = images_cam_folder_path + str(key) + '.jpg'
             if laptop_capture:
-                image_path_dict_all[key] = images_local_folder_path + str(0) + '.jpg'
+                image_path_dict_all[key] = images_cam_folder_path + str(0) + '.jpg'
                 key = 0
-            print "Initializing Camera..." + str(key)
+            logging.debug ("Initializing Camera...%s" + str(key))
             start_cam(key,image_path_dict_all[key])
         else:
-            print "Reading Locally Stored Images..."
+            logging.debug ("Reading Locally Stored Images...")
             image_path_dict_all[key] = images_local_folder_path + str(key) + '.jpg'
-            print image_path_dict_all[key]
+            logging.debug ('image_path_dict_all %s',image_path_dict_all[key])
     #TODO: Validation Check
     return image_path_dict_all

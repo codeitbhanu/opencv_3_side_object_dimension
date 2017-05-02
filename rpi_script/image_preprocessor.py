@@ -5,6 +5,8 @@ import numpy as np
 from imutils import perspective
 import imutils
 
+from disable_enable_print import *
+
 glob_h1 = 10
 glob_h2 = 230
 
@@ -17,9 +19,9 @@ glob_v2 = 250
 def rotateImage(image, angle):
     image
     image_center = tuple(np.array(image.shape) / 2)
-    # print'image_center: ', image_center
+    # logging.debug('image_center: %s', image_center)
     image_center = (image_center[0], image_center[1])
-    # print'now image_center: ', image_center
+    # logging.debug('now image_center: %s', image_center)
     rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1)
     result = cv2.warpAffine(image, rot_mat, image.shape,
                             flags=cv2.INTER_LINEAR)

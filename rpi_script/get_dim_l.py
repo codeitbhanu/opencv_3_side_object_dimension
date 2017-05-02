@@ -9,13 +9,15 @@ import cv2
 
 toShowOutput = False
 
+from disable_enable_print import *
+
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 def util_show_image(_title, img, _waittime=0, _writeToFile=1):
 
     if toShowOutput:
-        print 'util_show_image called'
+        logging.debug ('util_show_image called')
         cv2.imshow(_title, img)
         if not _waittime:
             cv2.waitKey(0)

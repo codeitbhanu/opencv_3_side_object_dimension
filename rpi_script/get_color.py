@@ -42,7 +42,7 @@ def util_show_image(_title, img, _waittime=0, _writeToFile=1):
     
     # toShowOutput = 1
     if toShowOutput:
-        print 'util_show_image called'
+        logging.debug ('util_show_image called')
         cv2.imshow(_title, img)
         if not _waittime:
             cv2.waitKey(0)
@@ -175,7 +175,7 @@ def process(image):
     # circled = circle_contour(overlay, big_biscuit_contour)
     rectangled, box = rectangle_contour(overlay, big_biscuit_contour)
 
-    print "rectangled",rectangled
+    logging.debug ("rectangled %s",rectangled)
     # Finally convert back to BGR to display
     bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
     # bgr = cv2.cvtColor(circled, cv2.COLOR_RGB2BGR)
@@ -222,10 +222,10 @@ def fill_black_with_white(data):
 def get_color_code(image):
     average_color_per_row = np.average(image, axis=0)
     average_color = np.average(average_color_per_row, axis=0)
-    print "get_color_code: Average Colro: ",average_color
+    logging.debug ("get_color_code: Average Color: %s",average_color)
     average_color = np.uint8(average_color)
     average_color_img = np.array([[average_color]*100]*100, np.uint8)
-    # print(average_color_img)
+    # logging.debug(average_color_img)
     # cv2.imwrite( "average_color.png", average_color_img )
     # cv2.imshow('average_color.png',average_color_img)
     # cv2.waitKey(0)
@@ -283,7 +283,7 @@ def find_color(img_path, clr_profile=0):
         result = new_img
 
         height, width, depth = result.shape
-        print "Height: ",height, " Width: ",width, " Depth: ",depth
+        logging.debug ("Height: %s Width: %s Depth: %s",height,width,depth)
 
         # TODO: To Add More Color Picking Profile Support
         b = g = r = 0

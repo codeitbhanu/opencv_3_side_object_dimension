@@ -6,6 +6,8 @@ import argparse
 import imutils
 import cv2
 
+from disable_enable_print import *
+
 toShowOutput = False
 
 
@@ -15,7 +17,7 @@ def midpoint(ptA, ptB):
 def util_show_image(_title, img, _waittime=0, _writeToFile=1):
     
     if toShowOutput:
-        print 'util_show_image called'
+        logging.debug ('util_show_image called')
         cv2.imshow(_title, img)
         if not _waittime:
             cv2.waitKey(0)
@@ -41,7 +43,7 @@ def util_invert_image(img):
 
 ref_width = 40
 def get(image):
-    print 'Inside...',__name__
+    logging.debug ('Inside...%s',__name__)
     util_show_image('original', image)
 
     # image = cv2.bitwise_not(image)
@@ -127,8 +129,7 @@ def get(image):
         dimA = dA / pixelsPerMetric
         dimB = dB / pixelsPerMetric
         # if _count > 0:
-        # print "Object {} Width is {:.1f}mm, Height is
-        # {:.1f}mm".format(_count, dimA, dimB)
+        logging.debug ("Object {} Width is {:.1f}mm, Height is {:.1f}mm".format(_count, dimA, dimB))
 
         _count = _count + 1
 

@@ -1,5 +1,8 @@
 from util_network import get_local_ip_address
 from flask import Flask, redirect, url_for, request
+
+from disable_enable_print import *
+
 app = Flask(__name__)
 
 __app_name__ = 'myWebApp'
