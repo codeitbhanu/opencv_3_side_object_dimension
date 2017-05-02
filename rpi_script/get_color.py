@@ -306,10 +306,9 @@ def find_color(img_path, clr_profile=0):
         """
         return r,g,b
         
-# if __name__ == '__main__':
-#     main()
+if __name__ == '__main__':
+    find_color('img_local/0.jpg')
 
 def get(img_path, clr_profile=0):
-    enable_print()
-    print "This is...",__name__
+    # enable_print()
     return find_color(img_path, clr_profile)

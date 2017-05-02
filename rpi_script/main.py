@@ -13,7 +13,7 @@ if __name__ == '__main__':
     # werkzeug_server.run_server('enp0s20u3')
     # flask_server.run_server('enp0s20u3')
 
-    disable_print()
+    # disable_print()
 
     img_dict = capture.capture_images()
     print img_dict
