@@ -19,7 +19,7 @@ import argparse
 import imutils
 import cv2
 
-toShowOutput = False
+toShowOutput = True
 
 
 def midpoint(ptA, ptB):
@@ -28,7 +28,6 @@ def midpoint(ptA, ptB):
 
 def util_show_image(_title, img, _waittime=0, _writeToFile=1):
 
-    # toShowOutput = 1
     if toShowOutput:
         print 'util_show_image called'
         cv2.imshow(_title, img)

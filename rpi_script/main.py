@@ -10,10 +10,11 @@ import process_images
 clr_profile = 0
 
 if __name__ == '__main__':
-    # werkzeug_server.run_server('enp0s20u3')
-    # flask_server.run_server('enp0s20u3')
+    # werkzeug_server.run_server('enp0s26u1u1')
+    # flask_server.run_server('enp0s26u1u1')
 
-    disable_print()
+    print "...inside main loop..."
+    # disable_print()
 
     img_dict = capture.capture_images()
     logging.debug (img_dict)
@@ -22,8 +23,8 @@ if __name__ == '__main__':
     # TODO: Return Type to Decide, dimension per image, Color Per Image
     # (w,h,l,#FFEEDD)
 
-    enable_print()
-    logging.debug ("Processed Data: %s",ret)
+    # enable_print()
+    logging.info ("Processed Data: %s",ret)
 
     #TODO: Push Values to WebApp
     #TODO: Push Values to mySql

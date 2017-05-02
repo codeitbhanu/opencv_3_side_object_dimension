@@ -47,7 +47,7 @@ ref_width = 40
 def get(image):
     # load the image, convert it to grayscale, and blur it slightly
     # image = cv2.imread(img)
-    util_show_image("Original Image", image)
+    # util_show_image("Original Image", image)
     # image = image.copy()
 
     # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -134,6 +134,6 @@ def get(image):
                     0.65, (255, 255, 255), 2)
 
         # show the output image
-        util_show_image("Image", orig)
+        # util_show_image("Image", orig)
 
     return round(dimA,2), round(dimB,2)

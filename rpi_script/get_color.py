@@ -76,8 +76,7 @@ def find_biggest_contour(image):
     # cv2.drawContours(mask, [biggest_contour], -1, 255, -1) #wanted rotated
     # box around biscuit
     cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
-    # cv2.imshow('biggest_contour',biggest_contour)
-    # cv2.waitKey(0)
+    # util_show_image('biggest_contour',biggest_contour)
     return biggest_contour, mask
     
 def rectangle_contour(image, contour, toFill=True, colorFill=green):
@@ -111,7 +110,7 @@ def rectangle_contour(image, contour, toFill=True, colorFill=green):
     # box
     box = perspective.order_points(box)
     cv2.drawContours(image_with_rect, [box.astype("int")], -1, (0, 255, 0), 1)
-    # cv2.imshow('image_with_rect',image_with_rect)
+    # util_show_image('image_with_rect',image_with_rect)
     return image_with_rect, box
 
 
@@ -182,8 +181,7 @@ def process(image):
 
     # return bgr
 
-    # cv2.imshow('bgr',bgr)
-    # cv2.waitKey(0)
+    # util_show_image('bgr',bgr)
     return mask_closed,mask_clean,box
 
 def onChangeH1(x):
@@ -227,8 +225,8 @@ def get_color_code(image):
     average_color_img = np.array([[average_color]*100]*100, np.uint8)
     # logging.debug(average_color_img)
     # cv2.imwrite( "average_color.png", average_color_img )
-    # cv2.imshow('average_color.png',average_color_img)
-    # cv2.waitKey(0)
+    
+    # util_show_image('average_color.png',average_color_img)
     return average_color
 
 
@@ -263,7 +261,7 @@ def find_color(img_path, clr_profile=0):
         img_resized = cv2.resize(img_orig, None, fx=1 / 2, fy=1 / 2)
         img_resized = rotateImage(img_resized,-45)
         # cv2.drawContours(img_resized, [box.astype("int")], -1, (0, 255, 0), 1)
-        # cv2.imshow('img_resized', img_resized)
+        # util_show_image('img_resized', img_resized)
 
         result = cv2.bitwise_and(img_resized,img_resized,mask = mask_clean)
         # result = fill_black_with_white(result)
@@ -286,9 +284,13 @@ def find_color(img_path, clr_profile=0):
         logging.debug ("Height: %s Width: %s Depth: %s",height,width,depth)
 
         # TODO: To Add More Color Picking Profile Support
+        # TODO: Add Logic to Pick Color Except Black
         b = g = r = 0
         if clr_profile == 0:
             b,g,r = get_color_code(result)
+
+
+        # util_show_image('get_color:result', result)
         
         """
         cv2.imshow('Video', result)
@@ -311,4 +313,5 @@ if __name__ == '__main__':
 
 def get(img_path, clr_profile=0):
     # enable_print()
-    return find_color(img_path, clr_profile)
+    ret =  find_color(img_path, clr_profile)
+    return ret

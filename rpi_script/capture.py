@@ -3,7 +3,7 @@ from disable_enable_print import *
 
 capture_from_camera = False
 
-laptop_capture = True
+laptop_capture = False
 
 camera_port_front = 0 #img_front
 camera_port_rear = 1 #img_rear
@@ -34,7 +34,7 @@ def start_cam(camera_port, file,ramp_frames = 30):
     del(camera)
 
 def capture_images():
-    logging.debug('capture_images called')
+    logging.info('Initializing Capture')
     image_path_dict_all = { camera_port_front:"",
                         camera_port_top:"",
                         camera_port_rear:""}
@@ -46,7 +46,7 @@ def capture_images():
             if laptop_capture:
                 image_path_dict_all[key] = images_cam_folder_path + str(0) + '.jpg'
                 key = 0
-            logging.debug ("Initializing Camera...%s" + str(key))
+            logging.debug ("Initializing Camera...%s",str(key))
             start_cam(key,image_path_dict_all[key])
         else:
             logging.debug ("Reading Locally Stored Images...")

@@ -8,12 +8,12 @@ import cv2
 
 from disable_enable_print import *
 
-toShowOutput = False
 
 
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
+toShowOutput = False
 def util_show_image(_title, img, _waittime=0, _writeToFile=1):
     
     if toShowOutput:
