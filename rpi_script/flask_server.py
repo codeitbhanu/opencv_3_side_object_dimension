@@ -48,11 +48,15 @@ def execute(belt):
     logging.info("Processed Data: %s", ret)
 
     # return as json
-    return jsonify(results=ret,ensure_ascii=False)
+    # return jsonify(results=ret,ensure_ascii=False)
     # return 'welcome %s' % name
+    return str(dict)
 
 
 @app.route('/run', methods=['POST', 'GET'])
+
+
+
 def run():
     if request.method == 'POST':
         belt = request.form['belt']
@@ -65,4 +69,7 @@ def run():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    intf = 'enp0s20u3'
+    port = 5000
+    server_ip = get_local_ip_address(intf)    
+    app.run(server_ip,port,debug=True)

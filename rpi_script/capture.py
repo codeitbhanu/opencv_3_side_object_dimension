@@ -1,9 +1,9 @@
 import cv2
 from disable_enable_print import *
 
-capture_from_camera = False
+capture_from_camera = True
 
-laptop_capture = False
+laptop_capture = True
 
 camera_port_front = 0 #img_front
 camera_port_rear = 1 #img_rear

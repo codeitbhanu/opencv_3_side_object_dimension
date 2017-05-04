@@ -1,33 +1,117 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1">
-    <script src=jquery.min.js></script>
+    <script src="jquery.min.js"></script>
     <link rel="stylesheet" href="style.css">
     <title>Client App</title>
-    <script src=app.js></script>
+    <script src="app.js"></script>
 </head>
-
 <body>
+    <form action="http://192.168.225.197:5000/run" method="GET">
     <!-- This code is in the public domain. Enjoy! -->
-    <button id="button" class="button">Start</button>
-    <div id=" detail_div ">
-        <select name="belt">
-            <option value="106">106</option>
-            <option value="107">107</option>
-            <option value="201">201</option>
-            <option value="202">202</option>
-        </select>
-        <div id="div ">Width</div>
-        <div id="div ">Height</div>
-        <div id="div ">Length</div>
+    <center>
+        <h1>
+            COMPANY NAME</h1>
+    </center>
+    <hr />
+    <div id="detail_div">
+        <label>
+            &nbsp;&nbsp;&nbsp; Select Oven</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select
+                name="belt" style="width: 102px">
+                <option value="106">106</option>
+                <option value="107">107</option>
+                <option value="201">201</option>
+                <option value="202">202</option>
+            </select>
+        <label>
+            &nbsp;&nbsp;&nbsp; Select Product</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select
+                name="belt" style="width: 102px">
+                <option value="1">Veg Munch</option>
+                <option value="2">Snackles</option>
+                <option value="3">2 IN 1</option>
+                <option value="4">Jadoo</option>
+            </select>
+        <br />
+        <br />
     </div>
-    <div id="color_div"></div>
-    <div id="console_window">
-        <div id="div">Status</div>
+    <center>
+        <div>
+            <input id="button" class="button" value="Start Processing" type="submit">
+            <br />
+        </div>
+    </center>
+    <hr />
+    <!--<center>
+        <h2>
+            </h2>
+    </center>-->
+    <div>
+        <center>
+            <table style="width: 100%">
+                <tr>
+                    <td colspan="2" class="style1">
+                        <b>Results :</b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Width
+                    </td>
+                    <td id="colWidth">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Height
+                    </td>
+                    <td id="colHeight">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Length
+                    </td>
+                    <td id="colLength">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Front Color
+                    </td>
+                    <td id="colFrontColor">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Rear Color
+                    </td>
+                    <td id="colRearColor">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Weight
+                    </td>
+                    <td id="colWeight">
+                    </td>
+                </tr>
+            </table>
+        </center>
     </div>
+    </form>
+    <!--<div id="div ">
+        Width</div>
+    <div id="div ">
+        Height</div>
+    <div id="div ">
+        Length</div>
+    <div id="color_div">
+    </div>-->
+    <!--<div id="console_window">
+        <div id="div">
+            Status</div>
+    </div>-->
 </body>
-
 </html>
