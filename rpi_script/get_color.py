@@ -218,6 +218,22 @@ def fill_black_with_white(data):
     return data
 
 def get_color_code(image):
+    # util_show_image('input image for get color',image)
+
+    crop_percent = 10
+    h,w,d = image.shape
+    xstart,xend = (w*(crop_percent)/100),(w-(w*(crop_percent)/100))
+    ystart,yend = (h*(crop_percent)/100),(h-(h*(crop_percent)/100))
+
+    xstart = int(round(xstart))
+    xend = int(round(xend))
+    ystart = int(round(ystart))
+    yend = int(round(yend))
+
+    image = image[ystart:yend,xstart:xend]
+
+    # util_show_image('After Cropping...',image)
+
     average_color_per_row = np.average(image, axis=0)
     average_color = np.mean(average_color_per_row, axis=0)
     logging.debug ("get_color_code: Average Color: %s",average_color)
