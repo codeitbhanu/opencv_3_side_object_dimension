@@ -17,7 +17,7 @@ LEVELS = {
 FORMAT = '[%(asctime)-15s] [%(levelname)s] [%(filename)s:%(lineno)s]\t %(message)s'
 
 
-logging_level_name = 'debug'
+logging_level_name = 'info'
 logging_level = LEVELS.get(logging_level_name, logging.NOTSET)
 
 if logWriteType == 'file':

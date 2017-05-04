@@ -10,8 +10,8 @@ def get_whl(img_dict):
     w,h = gdf.get(img_dict[0])
     l = gdt.get(img_dict[2])
 
-    ret = {  'w':w,
-            'h':h,
-            'l':l}
+    ret = {  'w':str(w),
+            'h':str(h),
+            'l':str(l)}
     
     return ret

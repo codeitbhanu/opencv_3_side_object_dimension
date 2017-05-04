@@ -12,13 +12,13 @@ def get_color(img_dict, profile=0):
     rr,rg,rb = gc.get(img_dict[1], profile)
     rcode = str(rgb_to_hex((rr,rg,rb)))
 
-    return {'front':{'r':fr,
-            'g':fg,
-            'b':fb,
+    return {'front':{'r':str(fr),
+            'g':str(fg),
+            'b':str(fb),
             'code':fcode
             },
-            'rear':{'r':rr,
-            'g':rg,
-            'b':rb,
+            'rear':{'r':str(rr),
+            'g':str(rg),
+            'b':str(rb),
             'code':rcode
             }}

@@ -219,12 +219,12 @@ def fill_black_with_white(data):
 
 def get_color_code(image):
     average_color_per_row = np.average(image, axis=0)
-    average_color = np.average(average_color_per_row, axis=0)
+    average_color = np.mean(average_color_per_row, axis=0)
     logging.debug ("get_color_code: Average Color: %s",average_color)
     average_color = np.uint8(average_color)
     average_color_img = np.array([[average_color]*100]*100, np.uint8)
     # logging.debug(average_color_img)
-    # cv2.imwrite( "average_color.png", average_color_img )
+    cv2.imwrite( "average_color.png", average_color_img )
     
     # util_show_image('average_color.png',average_color_img)
     return average_color
