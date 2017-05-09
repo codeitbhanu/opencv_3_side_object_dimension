@@ -34,7 +34,52 @@ var myFunction = function() {
     xhttp.send();
 }
 
+var myJQueryFunction = function() {
+    console.log("Sending Request to Server...")
+    $.ajax({
+        url: "http://localhost:5000/run",
+        crossDomain: true,
+        beforeSend: function(client) {
+            //Authorization: "Basic " + btoa(username + ":" + password);
+            client.setRequestHeader('Authorization');
+            client.setRequestHeader('Access-Control-Allow-Origin','*');
+        },
+        success: function(result){
+        try {
+                data = JSON.parse(result)
+                // data = JSON.parse(this.responseText)
+                    // console.log("color: " + data.color.front.code)
 
-$(document).ready(function() {
-    //Do Some Work Man!!
+                var dimensions = data.dimensions;
+                var height = dimensions.h;
+                var length = dimensions.l;
+                var width = dimensions.w;
+
+                var allColor = data.color;
+                var frontColor = allColor.front.code;
+                var rearColor = allColor.rear.code;
+
+                document.getElementById("colWidth").innerHTML = width + 'mm';
+                document.getElementById("colHeight").innerHTML = height + 'mm';
+                document.getElementById("colLength").innerHTML = length + 'mm';
+                document.getElementById("colFrontColor").bgColor = frontColor;
+                document.getElementById("colFrontColor").innerHTML = frontColor;
+                document.getElementById("colRearColor").innerHTML = rearColor;
+                document.getElementById("colRearColor").bgColor = rearColor;
+
+            } catch (err) {
+                console.log('error in returned data: ' + err.message)
+            }
+        }
+    });
+}
+
+
+
+$(document).ready(function(){
+    // $("button").click(function(){
+    //     $.ajax({url: "demo_test.txt", success: function(result){
+    //         $("#div1").html(result);
+    //     }});
+    // });
 });

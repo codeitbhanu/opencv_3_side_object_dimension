@@ -14,15 +14,19 @@ def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
 toShowOutput = False
-def util_show_image(_title, img, _waittime=0, _writeToFile=1):
+def util_show_image(_title, img, _waittime=0, _writeToFile=0, _force=False):
     
-    if toShowOutput:
+    if toShowOutput or _force:
         logging.debug ('util_show_image called')
         cv2.imshow(_title, img)
         if not _waittime:
-            cv2.waitKey(0)
+            k = cv2.waitKey(1) & 0xFF
+            if k == 27:
+                return
         else:
-            cv2.waitKey(_waittime)
+            k = cv2.waitKey(_waittime) & 0xFF
+            if k == 27:
+                return
         if _writeToFile:
             util_write_image(_title + '.png', img)
 
@@ -44,7 +48,7 @@ def util_invert_image(img):
 ref_width = 40
 def get(image):
     logging.debug ('Inside...%s',__name__)
-    util_show_image('original', image)
+    util_show_image('original', image, 0, 1, True)
 
     # image = cv2.bitwise_not(image)
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
