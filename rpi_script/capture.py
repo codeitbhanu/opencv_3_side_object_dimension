@@ -1,16 +1,31 @@
 import cv2
+import RPi.GPIO as GPIO
+import time
+
 from disable_enable_print import *
 
-capture_from_camera = False
+capture_from_camera = True
 
 laptop_capture = False
 
-camera_port_front = 0 #img_front
-camera_port_rear = 1 #img_rear
-camera_port_top = 2 #img_top
+#camera_port_front = 2 #img_front
+#camera_port_rear = 1 #img_rear
+#camera_port_top = 0 #img_top
 
 images_local_folder_path = "img_local/"
 images_cam_folder_path = "img_webcam/"
+
+RelayPin = 11
+
+def act_led():
+    GPIO.setmode(GPIO.BOARD) # Set GPIO as numbering
+    GPIO.setup(RelayPin, GPIO.OUT)
+    GPIO.output(RelayPin, GPIO.LOW)
+
+def deact_led():
+    GPIO.output(RelayPin, GPIO.HIGH)
+    GPIO.cleanup()
+
 
 def start_cam(camera_port, file,ramp_frames = 30):
     # Now we can initialize the camera capture object with the cv2.VideoCapture class.
@@ -18,6 +33,9 @@ def start_cam(camera_port, file,ramp_frames = 30):
     camera = cv2.VideoCapture(camera_port)
     # Ramp the camera - these frames will be discarded and are only used to allow v4l2
     # to adjust light levels, if necessary
+    camera.set(3,1280)
+    camera.set(4,960)
+
     temp = None
     for i in xrange(ramp_frames):
         temp = camera.read()[1]
@@ -33,12 +51,12 @@ def start_cam(camera_port, file,ramp_frames = 30):
     # capture object until your script exits
     del(camera)
 
-def capture_images():
+def capture_images(fport,rport,tport):
     logging.info('Initializing Capture')
-    image_path_dict_all = { camera_port_front:"",
-                        camera_port_top:"",
-                        camera_port_rear:""}
-
+    image_path_dict_all = { fport:"",
+                        rport:"",
+                        tport:""}
+    act_led()
     for key in image_path_dict_all.keys():
         logging.debug ("reading: %s",key)
         if capture_from_camera:
@@ -53,4 +71,5 @@ def capture_images():
             image_path_dict_all[key] = images_local_folder_path + str(key) + '.jpg'
             logging.debug ('image_path_dict_all %s',image_path_dict_all[key])
     #TODO: Validation Check
+    deact_led()
     return image_path_dict_all

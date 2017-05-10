@@ -62,8 +62,7 @@ def find_biggest_contour(image):
     
     # Copy
     image = image.copy()
-    contours, hierarchy = cv2.findContours(
-        image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    _,contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # Isolate largest contour
     contour_sizes = [(cv2.contourArea(contour), contour)
@@ -288,7 +287,7 @@ def find_color(img_path, clr_profile=0):
         # cv2.imwrite('example.jpg',result)
         gray=cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
         edged = cv2.Canny(result, 10, 250)
-        (cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        (_,cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         idx = 0
         new_img = None
         for c in cnts:

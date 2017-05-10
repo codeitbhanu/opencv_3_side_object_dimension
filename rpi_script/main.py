@@ -7,6 +7,10 @@ import capture
 
 import process_images
 
+camera_port_front = 2 #img_front
+camera_port_rear = 1 #img_rear
+camera_port_top = 0 #img_top
+
 clr_profile = 0
 
 if __name__ == '__main__':
@@ -16,10 +20,10 @@ if __name__ == '__main__':
     print "...inside main loop..."
     # disable_print()
 
-    img_dict = capture.capture_images()
+    img_dict = capture.capture_images(camera_port_front,camera_port_rear,camera_port_top)
     logging.debug (img_dict)
 
-    ret = process_images.process(img_dict,clr_profile)
+    ret = process_images.process(img_dict,camera_port_front,camera_port_rear,camera_port_top,clr_profile)
     # TODO: Return Type to Decide, dimension per image, Color Per Image
     # (w,h,l,#FFEEDD)
 

@@ -7,16 +7,21 @@ import imutils
 
 from disable_enable_print import *
 
-glob_h1 = 10
+glob_h1 = 0
 glob_h2 = 230
 
-glob_s1 = 10
+glob_s1 = 0
 glob_s2 = 150
 
 glob_v1 = 44
-glob_v2 = 250
+glob_v2 = 256
+
 
 def rotateImage(image, angle):
+    from scipy import ndimage
+    return ndimage.rotate(image, angle, reshape=False)
+
+def __rotateImage(image, angle):
     image
     image_center = tuple(np.array(image.shape) / 2)
     # logging.debug('image_center: %s', image_center)
@@ -26,6 +31,9 @@ def rotateImage(image, angle):
     result = cv2.warpAffine(image, rot_mat, image.shape,
                             flags=cv2.INTER_LINEAR)
     return result
+
+def util_write_image(_title, img):
+    cv2.imwrite(_title, img)
 
 
 def overlay_mask(mask, image):
@@ -206,8 +214,37 @@ def main():
 
 
 def run(img_path,image_type):
+    global glob_h1
+    global glob_h2
+    global glob_s1
+    global glob_s2
+    global glob_v1
+    global glob_v2
+	
+    result = ""
     img = cv2.imread(img_path)    
-    result = process(img)
     if image_type == 'front':
-        result = rotateImage(result,-45)
+        glob_h1 = 0
+        glob_h2 = 230
+
+        # glob_s1 = 10
+        glob_s1 = 0
+        glob_s2 = 150
+
+        glob_v1 = 44
+        glob_v2 = 220
+        result = process(img)
+        result = rotateImage(result,-135)
+    elif image_type == 'top':
+        glob_h1 = 0
+        glob_h2 = 230
+
+        # glob_s1 = 10
+        glob_s1 = 0
+        glob_s2 = 150
+
+        glob_v1 = 44
+        glob_v2 = 250
+        result = process(img)
+        result = cv2.flip(result,1)
     return result

@@ -149,4 +149,4 @@ def get(image):
         # show the output image
         util_show_image("Image", orig)
 
-    return round(dimA,2), round(dimB,2)
+        return round(dimA,2), round(dimB,2)

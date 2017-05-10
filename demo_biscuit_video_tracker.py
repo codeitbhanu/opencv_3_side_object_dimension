@@ -10,14 +10,14 @@ green = (0, 255, 0)
 # import cv2
 # import numpy as np
 
-glob_h1 = 10
+glob_h1 = 0
 glob_h2 = 230
   
-glob_s1 = 10
+glob_s1 = 0
 glob_s2 = 120
 
 glob_v1 = 44
-glob_v2 = 250
+glob_v2 = 256
 """
 
 def nothing(x):
@@ -185,9 +185,8 @@ def process(image):
 
     # Overlay cleaned mask on image
     overlay = overlay_mask(mask_clean, image)
-    cv2.imshow('overlay',overlay)
-    cv2.waitKey(0)
-
+    # cv2.imshow('overlay',overlay)
+    # cv2.waitKey(0)
     # Circle biggest biscuit
     # circled = circle_contour(overlay, big_biscuit_contour)
     rectangled = rectangle_contour(overlay, big_biscuit_contour)
@@ -255,7 +254,7 @@ def main():
         # f, img = video.read()
         f = True
         # img = cv2.imread('bisc.jpg')    
-        img = cv2.imread('it.jpg')    
+        img = cv2.imread('2.jpg')    
 
         """
         if firstCapture:
