@@ -1,0 +1,34 @@
+[2017-05-10 08:58:18,776] [INFO] [_internal.py:87]	 192.168.225.157 - - [10/May/2017 08:58:18] "GET /run HTTP/1.1" 500 -
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1997, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1985, in wsgi_app
+    response = self.handle_exception(e)
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1540, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1982, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1614, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1517, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1612, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python2.7/dist-packages/flask/app.py", line 1598, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/flask_server.py", line 65, in run
+    return execute(belt)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/flask_server.py", line 26, in execute
+    ret = process_images.process(img_dict, clr_profile)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/process_images.py", line 19, in process
+    clr_ret = detect_color.get_color(img_dict, profile=clr_profile)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/detect_color.py", line 10, in get_color
+    fr,fg,fb = gc.get(img_dict[0], profile, imgType='front')
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/get_color.py", line 336, in get
+    ret =  find_color(img_path, clr_profile)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/get_color.py", line 274, in find_color
+    _,mask_clean,box = process(img)
+  File "/home/pi/projects/github_codeitbhanu/opencv_3_side_object_dimension/rpi_script/get_color.py", line 176, in process
+    rectangled, box = rectangle_contour(overlay, big_biscuit_contour)
+ValueError: too many values to unpack
+
