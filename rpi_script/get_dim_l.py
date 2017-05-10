@@ -49,7 +49,7 @@ def get(image):
     # image = cv2.imread(img)
     # util_show_image("Original Image", image)
     # image = image.copy()
-
+    util_write_image('debug_get_dim_l_input.jpg',image)
     # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # image = cv2.Canny(image, 1, 100)

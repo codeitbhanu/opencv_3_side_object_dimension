@@ -48,8 +48,8 @@ def util_invert_image(img):
 ref_width = 40
 def get(image):
     logging.debug ('Inside...%s',__name__)
-    util_show_image('original', image, 0, 1, True)
-
+    # util_show_image('original', image, 0, 1, True)
+    util_write_image('debug_get_dim_hw_input.jpg',image)
     # image = cv2.bitwise_not(image)
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(image, (7, 7), 0)

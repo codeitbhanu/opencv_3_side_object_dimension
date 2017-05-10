@@ -65,12 +65,12 @@ def run():
         return execute(belt)
 
 
-onLocalHost = True
+onLocalHost = False
 if __name__ == '__main__':
     if onLocalHost == False:
         intf = 'enp0s26u1u1'
         port = 5000
-        # server_ip = get_local_ip_address(intf)
-        # app.run(server_ip,port,debug=True)
+        server_ip = get_local_ip_address(intf)
+        app.run(server_ip,port,debug=True)
     else:
         app.run(debug=True)

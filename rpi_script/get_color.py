@@ -27,6 +27,8 @@ glob_s2 = 120
 glob_v1 = 0
 glob_v2 = 150
 
+imageType=0
+
 def rotateImage(image, angle):
     from scipy import ndimage
     return ndimage.rotate(image, angle, reshape=False)
@@ -219,7 +221,7 @@ def fill_black_with_white(data):
 
 def get_color_code(image):
     # util_show_image('input image for get color',image)
-
+    global imageType
     crop_percent = 10
     h,w,d = image.shape
     xstart,xend = (w*(crop_percent)/100),(w-(w*(crop_percent)/100))
@@ -232,6 +234,7 @@ def get_color_code(image):
 
     image = image[ystart:yend,xstart:xend]
 
+    util_write_image('debug_get_color_%s.jpg'%format(imageType),image)
     # util_show_image('After Cropping...',image)
 
     average_color_per_row = np.average(image, axis=0)
@@ -327,7 +330,9 @@ def find_color(img_path, clr_profile=0):
 if __name__ == '__main__':
     find_color('img_local/0.jpg')
 
-def get(img_path, clr_profile=0):
+def get(img_path, clr_profile=0, imgType=None):
     # enable_print()
+    global imageType
+    imageType = imgType
     ret =  find_color(img_path, clr_profile)
     return ret
