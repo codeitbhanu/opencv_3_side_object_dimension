@@ -6,6 +6,12 @@ import capture
 from flask import jsonify
 import json
 import process_images
+
+camera_port_front = 2 #img_front
+camera_port_rear = 1 #img_rear
+camera_port_top = 0 #img_top
+
+
 clr_profile = 0
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 from disable_enable_print import *
@@ -20,10 +26,10 @@ def root():
 @app.route('/execute/<name>')
 def execute(belt):
     logging.info('*** Started Executing For Belt: %s ***', belt)
-    img_dict = capture.capture_images()
+    img_dict = capture.capture_images(camera_port_front,camera_port_rear,camera_port_top)
     logging.debug(img_dict)
 
-    ret = process_images.process(img_dict, clr_profile)
+    ret = process_images.process(img_dict,camera_port_front,camera_port_rear,camera_port_top,clr_profile)
     # TODO: Return Type to Decide, dimension per image, Color Per Image
     # (w,h,l,#FFEEDD)
 
