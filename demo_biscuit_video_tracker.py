@@ -254,7 +254,7 @@ def main():
         # f, img = video.read()
         f = True
         # img = cv2.imread('bisc.jpg')    
-        img = cv2.imread('2.jpg')    
+        img = cv2.imread('1.jpg')    
 
         """
         if firstCapture:
