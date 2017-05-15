@@ -82,8 +82,8 @@ def process(image):
     global glob_v1
     global glob_v2
 
-    # image = cv2.resize(image, None, fx=1 / 4, fy=1 / 4)
-    image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
+    image = cv2.resize(image, None, fx=1 / 4, fy=1 / 4)
+    #image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -142,14 +142,22 @@ def onChangeV2(x):
 
 enabled_tracker = True
 def main(img_path,image_type):
-    """
-    # Load video
-    video = cv2.VideoCapture(2)
+    
+    global glob_h1
+    global glob_h2
+    global glob_s1
+    global glob_s2
+    global glob_v1
+    global glob_v2
 
-    if not video.isOpened():
-        video.release()
-        raise RuntimeError('Video not open')
-    """
+    glob_h1 = 0
+    glob_h2 = 180
+    # glob_s1 = 10
+    glob_s1 = 0 #!CAUTION
+    glob_s2 = 98
+    glob_v1 = 0
+    glob_v2 = 256
+
     cv2.namedWindow("Video")
     # create trackbars for color change
     if enabled_tracker:
@@ -200,14 +208,14 @@ def run(img_path,image_type):
     img = cv2.imread(img_path)    
     if image_type == 'front':
         glob_h1 = 0
-        glob_h2 = 186
+        glob_h2 = 180
 
         # glob_s1 = 10
         glob_s1 = 0
-        glob_s2 = 150
+        glob_s2 = 140
 
         glob_v1 = 0
-        glob_v2 = 236
+        glob_v2 = 256
         result = process(img)
         # h,w,d = result.shape
         # result = util_crop_image(result,0,w,20,h-20)
@@ -216,13 +224,13 @@ def run(img_path,image_type):
 
     elif image_type == 'top':
         glob_h1 = 0
-        glob_h2 = 240
+        glob_h2 = 180
 
         # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 180
+        glob_s1 = 0 #!CAUTION
+        glob_s2 = 98
 
-        glob_v1 = 44
+        glob_v1 = 0
         glob_v2 = 256
         imgH, imgW, imgD = img.shape
         img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
@@ -232,7 +240,7 @@ def run(img_path,image_type):
     return result
 
 if __name__ == '__main__':
-    # main('img_local/2.jpg','front')
+    main('img_webcam/2.jpg','top')
     # main('img_local/1.jpg','top')
-    run('img_local/2.jpg','front')
+    # run('img_local/2.jpg','front')
     # run('img_local/1.jpg','top')

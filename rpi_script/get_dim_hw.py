@@ -12,7 +12,7 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 21.5
+ref_width = 20.8
 def get(image):
     logging.debug ('Inside...%s',__name__)
     # util_show_image('original', image, 0, 1, True)
@@ -41,7 +41,7 @@ def get(image):
     _count = 0
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
-        if cv2.contourArea(c) < 100:
+        if cv2.contourArea(c) < 50:
             continue
 
         # compute the rotated bounding box of the contour

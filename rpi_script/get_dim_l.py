@@ -42,7 +42,7 @@ def get(image):
     _count = 0
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
-        if cv2.contourArea(c) < 30:
+        if cv2.contourArea(c) < 40:
             continue
 
         # compute the rotated bounding box of the contour
@@ -109,14 +109,14 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)
+        util_show_image("Result After Dimension Finding", orig, 0)
         if _count == 0:
             _count = _count + 1
             continue
     return round(dimA,2), round(dimB,2)
 
 if __name__ == '__main__':
-    img_path = 'debug_get_dim_l_input.jpg' #front
+    img_path = 'img_webcam/2.jpg' #front
     img = cv2.imread(img_path) 
     h,w = get(img)
     print "H: %s, W: %s"%(h,w)
