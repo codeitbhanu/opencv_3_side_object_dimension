@@ -5,9 +5,13 @@ import numpy as np
 from imutils import perspective
 import imutils
 from PIL import Image
-from disable_enable_print import *
-
 from scipy.ndimage import median_filter
+from time import sleep
+
+
+from disable_enable_print import *
+from util_image import *
+
 
 blue = (255, 0, 0)
 green = (0, 255, 0)
@@ -18,40 +22,16 @@ low_red = (0, 0, 254)
 black = (0, 0, 0)
 white = (255,255,255)
 
-glob_h1 = 10
-glob_h2 = 80
+glob_h1 = 0
+glob_h2 = 134
 
-glob_s1 = 10
-glob_s2 = 120
+glob_s1 = 0
+glob_s2 = 154
 
 glob_v1 = 0
-glob_v2 = 150
+glob_v2 = 180
 
 imageType=0
-
-def rotateImage(image, angle):
-    from scipy import ndimage
-    return ndimage.rotate(image, angle, reshape=False)
-
-def util_invert_image(img):
-    return cv2.bitwise_not(img)
-
-def util_write_image(_title, img):
-    cv2.imwrite(_title, img)
-
-toShowOutput = True
-def util_show_image(_title, img, _waittime=0, _writeToFile=1):
-    
-    # toShowOutput = 1
-    if toShowOutput:
-        logging.debug ('util_show_image called')
-        cv2.imshow(_title, img)
-        if not _waittime:
-            cv2.waitKey(0)
-        else:
-            cv2.waitKey(_waittime)
-        if _writeToFile:
-            util_write_image(_title + '.png', img)
 
 def overlay_mask(mask, image):
     rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
@@ -62,7 +42,8 @@ def find_biggest_contour(image):
     
     # Copy
     image = image.copy()
-    _,contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # _,contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #RPI
+    contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
     # Isolate largest contour
     contour_sizes = [(cv2.contourArea(contour), contour)
@@ -144,7 +125,7 @@ def process(image):
     mask2 = cv2.inRange(image_blur_hsv, min_red2, max_red2)
 
     """
-
+    print "H1: %s S1: %s V1: %s -------- H2: %s S2: %s V2: %s"%(glob_h1,glob_s1,glob_v1,glob_h2,glob_s2,glob_v2)
     # Filter by colour
     # 0-10 hue                 H,  S,   V
     min_bisc_brown = np.array([glob_h1, glob_s1, glob_v1])
@@ -175,7 +156,7 @@ def process(image):
     # circled = circle_contour(overlay, big_biscuit_contour)
     rectangled, box = rectangle_contour(overlay, big_biscuit_contour)
 
-    logging.debug ("rectangled %s",rectangled)
+    # logging.debug ("rectangled %s",rectangled)
     # Finally convert back to BGR to display
     bgr = cv2.cvtColor(rectangled, cv2.COLOR_RGB2BGR)
     # bgr = cv2.cvtColor(circled, cv2.COLOR_RGB2BGR)
@@ -233,7 +214,7 @@ def get_color_code(image):
 
     image = image[ystart:yend,xstart:xend]
 
-    util_write_image('debug_get_color_%s.jpg'%format(imageType),image)
+    # util_write_image('debug_get_color_%s.jpg'%format(imageType),image)
     # util_show_image('After Cropping...',image)
 
     average_color_per_row = np.average(image, axis=0)
@@ -242,7 +223,7 @@ def get_color_code(image):
     average_color = np.uint8(average_color)
     average_color_img = np.array([[average_color]*100]*100, np.uint8)
     # logging.debug(average_color_img)
-    cv2.imwrite( "average_color.png", average_color_img )
+    # cv2.imwrite( "average_color.png", average_color_img )
     
     # util_show_image('average_color.png',average_color_img)
     return average_color
@@ -251,6 +232,13 @@ def get_color_code(image):
 enabled_tracker = False
 def find_color(img_path, clr_profile=0):
     # create trackbars for color change
+    global glob_h1
+    global glob_h2
+    global glob_s1
+    global glob_s2
+    global glob_v1
+    global glob_v2
+
     if enabled_tracker:
         cv2.namedWindow("Video")
         cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
@@ -260,11 +248,11 @@ def find_color(img_path, clr_profile=0):
         cv2.createTrackbar('H2', 'Video', glob_h2, 359, onChangeH2)
         cv2.createTrackbar('S2', 'Video', glob_s2, 256, onChangeS2)
         cv2.createTrackbar('V2', 'Video', glob_v2, 256, onChangeV2)
-    
 
     firstCapture = True
     while firstCapture:
         firstCapture = False
+        # sleep(0.100)
         # f, img = video.read()
         f = True
         # img = cv2.imread('bisc.jpg')    
@@ -272,14 +260,14 @@ def find_color(img_path, clr_profile=0):
         img_orig = img.copy()
 
         _,mask_clean,box = process(img)
-        mask_clean = rotateImage(mask_clean,-45)
+
+        mask_clean = util_rotate_image(mask_clean,-45)
         # mask_clean = cv2.dilate(mask_clean, None, iterations=2)
         mask_clean = cv2.erode(mask_clean, None, iterations=2)
 
         img_resized = cv2.resize(img_orig, None, fx=1 / 2, fy=1 / 2)
-        img_resized = rotateImage(img_resized,-45)
+        img_resized = util_rotate_image(img_resized,-45)
         # cv2.drawContours(img_resized, [box.astype("int")], -1, (0, 255, 0), 1)
-        # util_show_image('img_resized', img_resized)
 
         result = cv2.bitwise_and(img_resized,img_resized,mask = mask_clean)
         # result = fill_black_with_white(result)
@@ -287,7 +275,8 @@ def find_color(img_path, clr_profile=0):
         # cv2.imwrite('example.jpg',result)
         gray=cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
         edged = cv2.Canny(result, 10, 250)
-        (_,cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # (_,cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #RPI
+        (cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         idx = 0
         new_img = None
         for c in cnts:
@@ -295,11 +284,13 @@ def find_color(img_path, clr_profile=0):
             if w>50 and h>50:
                 idx+=1
                 new_img=result[y:y+h,x:x+w]
-                # cv2.imwrite('front'+str(idx) + '.png', new_img)
+                cv2.imwrite('front'+str(idx) + '.png', new_img)
         result = new_img
 
+        # util_show_image('result--------------',result)
+
         height, width, depth = result.shape
-        logging.debug ("Height: %s Width: %s Depth: %s",height,width,depth)
+        # logging.debug ("Height: %s Width: %s Depth: %s",height,width,depth)
 
         # TODO: To Add More Color Picking Profile Support
         # TODO: Add Logic to Pick Color Except Black
@@ -307,9 +298,13 @@ def find_color(img_path, clr_profile=0):
         if clr_profile == 0:
             b,g,r = get_color_code(result)
 
-
-        # util_show_image('get_color:result', result)
+        global imageType
+        if imageType == 'front':
+            result = util_rotate_image(result,3)
+        if imageType == 'rear':
+            result = util_rotate_image(result,-2)
         
+
         """
         cv2.imshow('Video', result)
 
@@ -326,12 +321,54 @@ def find_color(img_path, clr_profile=0):
         """
         return r,g,b
         
-if __name__ == '__main__':
-    find_color('img_local/0.jpg')
 
 def get(img_path, clr_profile=0, imgType=None):
     # enable_print()
     global imageType
     imageType = imgType
-    ret =  find_color(img_path, clr_profile)
-    return ret
+
+    global glob_h1
+    global glob_h2
+    global glob_s1
+    global glob_s2
+    global glob_v1
+    global glob_v2
+    
+    result = ""
+    if imgType == 'front':
+        glob_h1 = 0
+        glob_h2 = 134
+
+        # glob_s1 = 10
+        glob_s1 = 0
+        glob_s2 = 154
+
+        glob_v1 = 0
+        glob_v2 = 180
+        result =  find_color(img_path, clr_profile)
+        # h,w,d = result.shape
+        # result = util_crop_image(result,0,w,20,h-20)
+        # result = util_rotate_image(result,3)
+        # util_show_image('output:result',result)
+
+    elif imgType == 'rear':
+        glob_h1 = 0
+        glob_h2 = 193
+
+        # glob_s1 = 10
+        glob_s1 = 0
+        glob_s2 = 169
+
+        glob_v1 = 0
+        glob_v2 = 240
+        # imgH, imgW, imgD = img.shape
+        # img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
+        result =  find_color(img_path, clr_profile)
+        # util_show_image('output:result',result)
+        # result = cv2.flip(result,1)
+
+
+    return result
+
+if __name__ == '__main__':
+    get('img_local/2.jpg',0,'front')

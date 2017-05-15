@@ -1,0 +1,18 @@
+pip install flask flask-login flask-openid flask-mail flask-sqlalchemy sqlalchemy-migrate flask-whooshalchemy flask-wtf flask-babel guess_language flipflop coverage
+
+
+    # Isolate largest contour
+    contour_sizes = [(cv2.contourArea(contour), contour)
+                     for contour in contours]
+
+    if not contour_sizes:
+        return None, image
+
+    biggest_contour = max(contour_sizes, key=lambda x: x[0])[1]
+
+    mask = np.zeros(image.shape, np.uint8)
+    # cv2.drawContours(mask, [biggest_contour], -1, 255, -1) #wanted rotated
+    # box around biscuit
+    cv2.drawContours(mask, [biggest_contour], 0, (0, 0, 255), 2)
+    # cv2.imshow('biggest_contour',biggest_contour)
+    # cv2.waitKey(0)

@@ -8,8 +8,8 @@ import capture
 import process_images
 
 camera_port_front = 2 #img_front
-camera_port_rear = 1 #img_rear
-camera_port_top = 0 #img_top
+camera_port_rear = 0 #img_rear
+camera_port_top = 1 #img_top
 
 clr_profile = 0
 

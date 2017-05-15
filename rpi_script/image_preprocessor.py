@@ -6,35 +6,16 @@ from imutils import perspective
 import imutils
 
 from disable_enable_print import *
+from util_image import *
 
 glob_h1 = 0
-glob_h2 = 230
+glob_h2 = 200
 
 glob_s1 = 0
-glob_s2 = 150
+glob_s2 = 220
 
 glob_v1 = 44
-glob_v2 = 256
-
-
-def rotateImage(image, angle):
-    from scipy import ndimage
-    return ndimage.rotate(image, angle, reshape=False)
-
-def __rotateImage(image, angle):
-    image
-    image_center = tuple(np.array(image.shape) / 2)
-    # logging.debug('image_center: %s', image_center)
-    image_center = (image_center[0], image_center[1])
-    # logging.debug('now image_center: %s', image_center)
-    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1)
-    result = cv2.warpAffine(image, rot_mat, image.shape,
-                            flags=cv2.INTER_LINEAR)
-    return result
-
-def util_write_image(_title, img):
-    cv2.imwrite(_title, img)
-
+glob_v2 = 140
 
 def overlay_mask(mask, image):
     rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
@@ -101,6 +82,7 @@ def process(image):
     global glob_v1
     global glob_v2
 
+    # image = cv2.resize(image, None, fx=1 / 4, fy=1 / 4)
     image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -158,8 +140,8 @@ def onChangeV2(x):
     global glob_v2
     glob_v2 = x
 
-enabled_tracker = False
-def main():
+enabled_tracker = True
+def main(img_path,image_type):
     """
     # Load video
     video = cv2.VideoCapture(2)
@@ -183,9 +165,8 @@ def main():
     firstCapture = True
     while True:
         # f, img = video.read()
-        f = True
-        # img = cv2.imread('bisc.jpg')    
-        img = cv2.imread('if.jpg')    
+        f = True 
+        img = cv2.imread(img_path)    
 
         """
         if firstCapture:
@@ -194,12 +175,11 @@ def main():
         """
         result = process(img)
 
-        # result = rotateImage(result,-45)
+        # result = util_rotate_image(result,-45)
         cv2.imshow('Video', result)
 
         # Wait for 1ms
         key = cv2.waitKey(1) & 0xFF
-
         # Press escape to exit
         if key == 27:
             return
@@ -207,11 +187,6 @@ def main():
         # Reached end of video
         if not f:
             return
-
-
-# if __name__ == '__main__':
-#     main()
-
 
 def run(img_path,image_type):
     global glob_h1
@@ -225,26 +200,39 @@ def run(img_path,image_type):
     img = cv2.imread(img_path)    
     if image_type == 'front':
         glob_h1 = 0
-        glob_h2 = 230
+        glob_h2 = 186
 
         # glob_s1 = 10
         glob_s1 = 0
         glob_s2 = 150
 
-        glob_v1 = 44
-        glob_v2 = 220
+        glob_v1 = 0
+        glob_v2 = 236
         result = process(img)
-        result = rotateImage(result,-135)
+        # h,w,d = result.shape
+        # result = util_crop_image(result,0,w,20,h-20)
+        result = util_rotate_image(result,-43)
+        # util_show_image('output:result',result)
+
     elif image_type == 'top':
         glob_h1 = 0
-        glob_h2 = 230
+        glob_h2 = 240
 
         # glob_s1 = 10
         glob_s1 = 0
-        glob_s2 = 150
+        glob_s2 = 180
 
         glob_v1 = 44
-        glob_v2 = 250
+        glob_v2 = 256
+        imgH, imgW, imgD = img.shape
+        img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result = process(img)
-        result = cv2.flip(result,1)
+        # util_show_image('output:result',result)
+        # result = cv2.flip(result,1)
     return result
+
+if __name__ == '__main__':
+    # main('img_local/2.jpg','front')
+    # main('img_local/1.jpg','top')
+    run('img_local/2.jpg','front')
+    # run('img_local/1.jpg','top')

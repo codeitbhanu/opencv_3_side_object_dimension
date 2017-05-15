@@ -1,16 +1,19 @@
 import cv2
-import RPi.GPIO as GPIO
 import time
 
 from disable_enable_print import *
 
-capture_from_camera = True
+capture_from_camera = False
 
 laptop_capture = False
+
+led_enabled = False
 
 #camera_port_front = 2 #img_front
 #camera_port_rear = 1 #img_rear
 #camera_port_top = 0 #img_top
+if led_enabled:
+    import RPi.GPIO as GPIO
 
 images_local_folder_path = "img_local/"
 images_cam_folder_path = "img_webcam/"
@@ -56,7 +59,8 @@ def capture_images(fport,rport,tport):
     image_path_dict_all = { fport:"",
                         rport:"",
                         tport:""}
-    act_led()
+    if led_enabled:
+        act_led()
     for key in image_path_dict_all.keys():
         logging.debug ("reading: %s",key)
         if capture_from_camera:
@@ -71,5 +75,6 @@ def capture_images(fport,rport,tport):
             image_path_dict_all[key] = images_local_folder_path + str(key) + '.jpg'
             logging.debug ('image_path_dict_all %s',image_path_dict_all[key])
     #TODO: Validation Check
-    deact_led()
+    if led_enabled:
+        deact_led()
     return image_path_dict_all

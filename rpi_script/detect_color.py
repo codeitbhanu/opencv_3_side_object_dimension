@@ -4,14 +4,12 @@ from webcolors import *
  
 def get_color(img_dict, fport, rport, tport, profile=0):
     logging.debug ("Processing For Color...")
-    # camera_port_front = 0 #img_front
-    # camera_port_rear = 1 #img_rear
-    # camera_port_top = 2 #img_top
+
     fr,fg,fb = gc.get(img_dict[fport], profile, imgType='front')
     fcode = str(rgb_to_hex((fr,fg,fb)))
     rr,rg,rb = gc.get(img_dict[rport], profile, imgType='rear')
     rcode = str(rgb_to_hex((rr,rg,rb)))
-
+    
     return {'front':{'r':str(fr),
             'g':str(fg),
             'b':str(fb),
@@ -22,3 +20,15 @@ def get_color(img_dict, fport, rport, tport, profile=0):
             'b':str(rb),
             'code':rcode
             }}
+    """
+    return {'front':{'r':str(143),
+            'g':str(130),
+            'b':str(121),
+            'code':'#8f8279'
+            },
+            'rear':{'r':str(143),
+            'g':str(140),
+            'b':str(141),
+            'code':'#8f8279'
+            }}
+    """

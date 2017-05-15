@@ -71,7 +71,7 @@ def run():
         return execute(belt)
 
 
-onLocalHost = False
+onLocalHost = True
 if __name__ == '__main__':
     if onLocalHost == False:
         intf = 'wlan0'
