@@ -15,6 +15,7 @@ def midpoint(ptA, ptB):
 ref_width = 20.8
 def get(image):
     logging.debug ('Inside...%s',__name__)
+    print "Config Data: ",config_data
     # util_show_image('original', image, 0, 1, True)
     util_write_image('debug_get_dim_hw_input.jpg',image)
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)

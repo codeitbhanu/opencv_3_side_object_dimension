@@ -3,11 +3,11 @@ import time
 
 from disable_enable_print import *
 
-capture_from_camera = True
+capture_from_camera = False
 
 laptop_capture = False
 
-led_enabled = True
+led_enabled = False
 
 #camera_port_front = 2 #img_front
 #camera_port_rear = 1 #img_rear

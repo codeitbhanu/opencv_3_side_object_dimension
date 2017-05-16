@@ -196,7 +196,7 @@ def main(img_path,image_type):
         if not f:
             return
 
-def run(img_path,image_type):
+def run(img_path,config_data,image_type):
     global glob_h1
     global glob_h2
     global glob_s1
@@ -207,7 +207,7 @@ def run(img_path,image_type):
     result = ""
     img = cv2.imread(img_path)    
     if image_type == 'front':
-        glob_h1 = 0
+        glob_h1 = 0 #config_data['type1'][][]  #START HERE
         glob_h2 = 180
 
         # glob_s1 = 10

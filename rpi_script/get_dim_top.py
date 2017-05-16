@@ -7,10 +7,10 @@ from util_image import *
 import get_dim_l
 
 pre_rotate_angle = 0 #TODO, change as per camera angle
-def get(img_path):
+def get(img_path, config_data):
     logging.debug ('Inside...%s',__name__)
     logging.debug ("TopImagePath: %s",img_path)
-    ret_img = image_preprocessor.run(img_path,'top')
+    ret_img = image_preprocessor.run(img_path,config_data,'top')
     # util_show_image('Preprocessed_Top_Image',ret_img)
 
     l1, l2 = get_dim_l.get(ret_img)

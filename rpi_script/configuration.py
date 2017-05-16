@@ -24,6 +24,7 @@ def process_config():
         config_data = json.load(in_file)
         # print data['type2']['img_proc']['front']
         in_file.close()
+        return config_data
         
 def write_config():
     if not json_file.is_file():

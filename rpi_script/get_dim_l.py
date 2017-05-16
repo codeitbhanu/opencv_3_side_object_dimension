@@ -109,7 +109,7 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        util_show_image("Result After Dimension Finding", orig, 0)
+        # util_show_image("Result After Dimension Finding", orig, 0)
         if _count == 0:
             _count = _count + 1
             continue

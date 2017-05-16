@@ -7,8 +7,8 @@ def get_whl(img_dict,fport,rport,tport):
     # camera_port_front = 0 #img_front
     # camera_port_rear = 1 #img_rear
     # camera_port_top = 2 #img_top
-    w,h = gdf.get(img_dict[fport])
-    l = gdt.get(img_dict[tport])
+    w,h = gdf.get(img_dict[fport],config_data)
+    l = gdt.get(img_dict[tport],config_data)
 
     ret = {  'w':str(w),
             'h':str(h),
