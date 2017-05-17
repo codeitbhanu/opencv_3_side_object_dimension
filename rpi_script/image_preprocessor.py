@@ -6,16 +6,17 @@ from imutils import perspective
 import imutils
 
 from disable_enable_print import *
+from configuration import *
 from util_image import *
 
-glob_h1 = 0
-glob_h2 = 200
+glob_lowH = -1
+glob_highH = -1
 
-glob_s1 = 0
-glob_s2 = 220
+glob_lowS = -1
+glob_highS = -1
 
-glob_v1 = 44
-glob_v2 = 140
+glob_lowV = -1
+glob_highV = -1
 
 def overlay_mask(mask, image):
     rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
@@ -75,12 +76,12 @@ def rectangle_contour(image, contour):
 
 def process(image):
     
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 
     image = cv2.resize(image, None, fx=1 / 4, fy=1 / 4)
     #image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
@@ -93,13 +94,13 @@ def process(image):
 
     # Filter by colour
     # 0-10 hue                 H,  S,   V
-    min_bisc_brown = np.array([glob_h1, glob_s1, glob_v1])
-    max_bisc_brown = np.array([glob_h2, glob_s2, glob_v2])
+    min_bisc_brown = np.array([glob_lowH, glob_lowS, glob_lowV])
+    max_bisc_brown = np.array([glob_highH, glob_highS, glob_highV])
     mask1 = cv2.inRange(image_blur_hsv, min_bisc_brown, max_bisc_brown)
 
     # 170-180 hue
-    min_bisc_brown2 = np.array([glob_h1 + 170, glob_s1, glob_v1])
-    max_bisc_brown2 = np.array([glob_h2 + 180, 256, 256])
+    min_bisc_brown2 = np.array([glob_lowH + 170, glob_lowS, glob_lowV])
+    max_bisc_brown2 = np.array([glob_highH + 180, 256, 256])
     mask2 = cv2.inRange(image_blur_hsv, min_bisc_brown2, max_bisc_brown2)
 
     # Combine masks
@@ -112,62 +113,61 @@ def process(image):
     return mask_clean
 
 def onChangeH1(x):
-    global glob_h1
-    glob_h1 = x
+    global glob_lowH
+    glob_lowH = x
 
 
 def onChangeS1(x):
-    global glob_s1
-    glob_s1 = x
+    global glob_lowS
+    glob_lowS = x
 
 
 def onChangeV1(x):
-    global glob_v1
-    glob_v1 = x
+    global glob_lowV
+    glob_lowV = x
 
 
 def onChangeH2(x):
-    global glob_h2
-    glob_h2 = x
+    global glob_highH
+    glob_highH = x
 
 
 def onChangeS2(x):
-    global glob_s2
-    glob_s2 = x
+    global glob_highS
+    glob_highS = x
 
 
 def onChangeV2(x):
-    global glob_v2
-    glob_v2 = x
+    global glob_highV
+    glob_highV = x
 
 enabled_tracker = True
-def main(img_path,image_type):
+def main(img_path,config_data, image_type):
     
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 
-    glob_h1 = 0
-    glob_h2 = 180
-    # glob_s1 = 10
-    glob_s1 = 0 #!CAUTION
-    glob_s2 = 98
-    glob_v1 = 0
-    glob_v2 = 256
+    glob_lowH = 0
+    glob_highH = 180
+    glob_lowS = 0 #!CAUTION
+    glob_highS = 98
+    glob_lowV = 0
+    glob_highV = 256
 
     cv2.namedWindow("Video")
     # create trackbars for color change
     if enabled_tracker:
-        cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
-        cv2.createTrackbar('S1', 'Video', glob_s1, 256, onChangeS1)
-        cv2.createTrackbar('V1', 'Video', glob_v1, 256, onChangeV1)
+        cv2.createTrackbar('H1', 'Video', glob_lowH, 359, onChangeH1)
+        cv2.createTrackbar('S1', 'Video', glob_lowS, 256, onChangeS1)
+        cv2.createTrackbar('V1', 'Video', glob_lowV, 256, onChangeV1)
 
-        cv2.createTrackbar('H2', 'Video', glob_h2, 359, onChangeH2)
-        cv2.createTrackbar('S2', 'Video', glob_s2, 256, onChangeS2)
-        cv2.createTrackbar('V2', 'Video', glob_v2, 256, onChangeV2)
+        cv2.createTrackbar('H2', 'Video', glob_highH, 359, onChangeH2)
+        cv2.createTrackbar('S2', 'Video', glob_highS, 256, onChangeS2)
+        cv2.createTrackbar('V2', 'Video', glob_highV, 256, onChangeV2)
     
 
     firstCapture = True
@@ -197,25 +197,28 @@ def main(img_path,image_type):
             return
 
 def run(img_path,config_data,image_type):
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
+
+    # logging.debug('config_data: %s'%(config_data['img_proc']))
 	
     result = ""
     img = cv2.imread(img_path)    
     if image_type == 'front':
-        glob_h1 = 0 #config_data['type1'][][]  #START HERE
-        glob_h2 = 180
+        glob_lowH = config_data['img_proc']['front']['lowH']
+        glob_highH = config_data['img_proc']['front']['highH']
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 140
+        logging.debug('glob_lowH: %s, glob_highH: %s',glob_lowH,glob_highH)
 
-        glob_v1 = 0
-        glob_v2 = 256
+        glob_lowS = config_data['img_proc']['front']['lowS']
+        glob_highS = config_data['img_proc']['front']['highS']
+
+        glob_lowV = config_data['img_proc']['front']['lowV']
+        glob_highV = config_data['img_proc']['front']['highV']
         result = process(img)
         # h,w,d = result.shape
         # result = util_crop_image(result,0,w,20,h-20)
@@ -223,15 +226,14 @@ def run(img_path,config_data,image_type):
         # util_show_image('output:result',result)
 
     elif image_type == 'top':
-        glob_h1 = 0
-        glob_h2 = 180
+        glob_lowH = config_data['img_proc']['top']['lowH']
+        glob_highH = config_data['img_proc']['top']['highH']
 
-        # glob_s1 = 10
-        glob_s1 = 0 #!CAUTION
-        glob_s2 = 98
+        glob_lowS = config_data['img_proc']['top']['lowS']
+        glob_highS = config_data['img_proc']['top']['highS']
 
-        glob_v1 = 0
-        glob_v2 = 256
+        glob_lowV = config_data['img_proc']['top']['lowV']
+        glob_highV = config_data['img_proc']['top']['highV']
         imgH, imgW, imgD = img.shape
         img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result = process(img)
@@ -240,7 +242,10 @@ def run(img_path,config_data,image_type):
     return result
 
 if __name__ == '__main__':
-    main('img_webcam/2.jpg','top')
-    # main('img_local/1.jpg','top')
-    # run('img_local/2.jpg','front')
-    # run('img_local/1.jpg','top')
+    config_data = process_config()
+    config_data = config_data['type1']
+
+    main('img_local/2.jpg',config_data, 'top')
+    # main('img_local/1.jpg',config_data,'top')
+    # run('img_local/2.jpg',config_data,'front')
+    # run('img_local/1.jpg',config_data, 'top')

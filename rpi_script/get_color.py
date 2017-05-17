@@ -23,14 +23,14 @@ low_red = (0, 0, 254)
 black = (0, 0, 0)
 white = (255,255,255)
 
-glob_h1 = 0
-glob_h2 = 134
+glob_lowH = -1
+glob_highH = -1
 
-glob_s1 = 0
-glob_s2 = 154
+glob_lowS = -1
+glob_highS = -1
 
-glob_v1 = 0
-glob_v2 = 180
+glob_lowV = -1
+glob_highV = -1
 
 imageType=0
 
@@ -99,12 +99,12 @@ def rectangle_contour(image, contour, toFill=True, colorFill=green):
 
 def process(image):
     
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 
     image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
 
@@ -126,16 +126,16 @@ def process(image):
     mask2 = cv2.inRange(image_blur_hsv, min_red2, max_red2)
 
     """
-    print "H1: %s S1: %s V1: %s -------- H2: %s S2: %s V2: %s"%(glob_h1,glob_s1,glob_v1,glob_h2,glob_s2,glob_v2)
+    print "H1: %s S1: %s V1: %s -------- H2: %s S2: %s V2: %s"%(glob_lowH,glob_lowS,glob_lowV,glob_highH,glob_highS,glob_highV)
     # Filter by colour
     # 0-10 hue                 H,  S,   V
-    min_bisc_brown = np.array([glob_h1, glob_s1, glob_v1])
-    max_bisc_brown = np.array([glob_h2, glob_s2, glob_v2])
+    min_bisc_brown = np.array([glob_lowH, glob_lowS, glob_lowV])
+    max_bisc_brown = np.array([glob_highH, glob_highS, glob_highV])
     mask1 = cv2.inRange(image_blur_hsv, min_bisc_brown, max_bisc_brown)
 
     # 170-180 hue
-    min_bisc_brown2 = np.array([glob_h1 + 170, glob_s1, glob_v1])
-    max_bisc_brown2 = np.array([glob_h2 + 180, 256, 256])
+    min_bisc_brown2 = np.array([glob_lowH + 170, glob_lowS, glob_lowV])
+    max_bisc_brown2 = np.array([glob_highH + 180, 256, 256])
     mask2 = cv2.inRange(image_blur_hsv, min_bisc_brown2, max_bisc_brown2)
 
     # Combine masks
@@ -168,33 +168,33 @@ def process(image):
     return mask_closed,mask_clean,box
 
 def onChangeH1(x):
-    global glob_h1
-    glob_h1 = x
+    global glob_lowH
+    glob_lowH = x
 
 
 def onChangeS1(x):
-    global glob_s1
-    glob_s1 = x
+    global glob_lowS
+    glob_lowS = x
 
 
 def onChangeV1(x):
-    global glob_v1
-    glob_v1 = x
+    global glob_lowV
+    glob_lowV = x
 
 
 def onChangeH2(x):
-    global glob_h2
-    glob_h2 = x
+    global glob_highH
+    glob_highH = x
 
 
 def onChangeS2(x):
-    global glob_s2
-    glob_s2 = x
+    global glob_highS
+    glob_highS = x
 
 
 def onChangeV2(x):
-    global glob_v2
-    glob_v2 = x
+    global glob_highV
+    glob_highV = x
 
 def fill_black_with_white(data):
     data[np.where((data == [0,0,0]).all(axis = 2))] = [255,255,255]
@@ -233,22 +233,22 @@ def get_color_code(image):
 enabled_tracker = False
 def find_color(img_path, clr_profile=0):
     # create trackbars for color change
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 
     if enabled_tracker:
         cv2.namedWindow("Video")
-        cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
-        cv2.createTrackbar('S1', 'Video', glob_s1, 256, onChangeS1)
-        cv2.createTrackbar('V1', 'Video', glob_v1, 256, onChangeV1)
+        cv2.createTrackbar('H1', 'Video', glob_lowH, 359, onChangeH1)
+        cv2.createTrackbar('S1', 'Video', glob_lowS, 256, onChangeS1)
+        cv2.createTrackbar('V1', 'Video', glob_lowV, 256, onChangeV1)
 
-        cv2.createTrackbar('H2', 'Video', glob_h2, 359, onChangeH2)
-        cv2.createTrackbar('S2', 'Video', glob_s2, 256, onChangeS2)
-        cv2.createTrackbar('V2', 'Video', glob_v2, 256, onChangeV2)
+        cv2.createTrackbar('H2', 'Video', glob_highH, 359, onChangeH2)
+        cv2.createTrackbar('S2', 'Video', glob_highS, 256, onChangeS2)
+        cv2.createTrackbar('V2', 'Video', glob_highV, 256, onChangeV2)
 
     firstCapture = True
     while firstCapture:
@@ -323,29 +323,29 @@ def find_color(img_path, clr_profile=0):
         return r,g,b
         
 
-def get(img_path, clr_profile=0, imgType=None):
+def get(img_path, config_data, clr_profile=0, imgType=None):
     # enable_print()
     global imageType
     imageType = imgType
 
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
     
     result = ""
     if imgType == 'front':
-        glob_h1 = 0
-        glob_h2 = 134
+        glob_lowH = config_data['get_color']['front']['lowH']
+        glob_highH = config_data['get_color']['front']['highH']
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 154
+        glob_lowS = config_data['get_color']['front']['lowS']
+        glob_highS = config_data['get_color']['front']['highS']
 
-        glob_v1 = 0
-        glob_v2 = 180
+        glob_lowV = config_data['get_color']['front']['lowV']
+        glob_highV = config_data['get_color']['front']['highV']
+
         result =  find_color(img_path, clr_profile)
         # h,w,d = result.shape
         # result = util_crop_image(result,0,w,20,h-20)
@@ -353,15 +353,15 @@ def get(img_path, clr_profile=0, imgType=None):
         # util_show_image('output:result',result)
 
     elif imgType == 'rear':
-        glob_h1 = 0
-        glob_h2 = 193
+        glob_lowH = config_data['get_color']['rear']['lowH']
+        glob_highH = config_data['get_color']['rear']['highH']
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 169
+        glob_lowS = config_data['get_color']['rear']['lowS']
+        glob_highS = config_data['get_color']['rear']['highS']
 
-        glob_v1 = 0
-        glob_v2 = 240
+        glob_lowV = config_data['get_color']['rear']['lowV']
+        glob_highV = config_data['get_color']['rear']['highV']
+
         # imgH, imgW, imgD = img.shape
         # img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result =  find_color(img_path, clr_profile)
@@ -372,4 +372,7 @@ def get(img_path, clr_profile=0, imgType=None):
     return result
 
 if __name__ == '__main__':
-    get('img_local/2.jpg',0,'front')
+    config_data = process_config()
+    config_data = config_data['type1']
+
+    get('img_local/2.jpg',config_data, 0,'front')

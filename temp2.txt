@@ -1,23 +1,23 @@
 def run(img_path,image_type):
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 	
     result = ""
     img = cv2.imread(img_path)    
     if image_type == 'front':
-        glob_h1 = 0
-        glob_h2 = 186
+        glob_lowH = 0
+        glob_highH = 186
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 140
+        # glob_lowS = 10
+        glob_lowS = 0
+        glob_highS = 140
 
-        glob_v1 = 0
-        glob_v2 = 226
+        glob_lowV = 0
+        glob_highV = 226
         result = process(img)
         # h,w,d = result.shape
         # result = util_crop_image(result,0,w,20,h-20)
@@ -25,15 +25,15 @@ def run(img_path,image_type):
         util_show_image('output:result',result)
 
     elif image_type == 'top':
-        glob_h1 = 0
-        glob_h2 = 240
+        glob_lowH = 0
+        glob_highH = 240
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 180
+        # glob_lowS = 10
+        glob_lowS = 0
+        glob_highS = 180
 
-        glob_v1 = 44
-        glob_v2 = 256
+        glob_lowV = 44
+        glob_highV = 256
         result = process(img)
         util_show_image('output:result',result)
         # result = cv2.flip(result,1)

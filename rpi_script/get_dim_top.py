@@ -11,7 +11,7 @@ def get(img_path, config_data):
     logging.debug ('Inside...%s',__name__)
     logging.debug ("TopImagePath: %s",img_path)
     ret_img = image_preprocessor.run(img_path,config_data,'top')
-    # util_show_image('Preprocessed_Top_Image',ret_img)
+    # util_show_image('Preprocessed_Top_Image',ret_img)   #DEBUG_TRY
 
     l1, l2 = get_dim_l.get(ret_img)
 

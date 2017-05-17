@@ -10,14 +10,14 @@ green = (0, 255, 0)
 # import cv2
 # import numpy as np
 
-glob_h1 = 0
-glob_h2 = 230
+glob_lowH = 0
+glob_highH = 230
   
-glob_s1 = 0
-glob_s2 = 120
+glob_lowS = 0
+glob_highS = 120
 
-glob_v1 = 44
-glob_v2 = 256
+glob_lowV = 44
+glob_highV = 256
 """
 
 def nothing(x):
@@ -132,12 +132,12 @@ def rectangle_contour(image, contour):
 
 def process(image):
 
-    global glob_h1
-    global glob_h2
-    global glob_s1
-    global glob_s2
-    global glob_v1
-    global glob_v2
+    global glob_lowH
+    global glob_highH
+    global glob_lowS
+    global glob_highS
+    global glob_lowV
+    global glob_highV
 
     image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
 
@@ -162,13 +162,13 @@ def process(image):
 
     # Filter by colour
     # 0-10 hue                 H,  S,   V
-    min_bisc_brown = np.array([glob_h1, glob_s1, glob_v1])
-    max_bisc_brown = np.array([glob_h2, glob_s2, glob_v2])
+    min_bisc_brown = np.array([glob_lowH, glob_lowS, glob_lowV])
+    max_bisc_brown = np.array([glob_highH, glob_highS, glob_highV])
     mask1 = cv2.inRange(image_blur_hsv, min_bisc_brown, max_bisc_brown)
 
     # 170-180 hue
-    min_bisc_brown2 = np.array([glob_h1 + 170, glob_s1, glob_v1])
-    max_bisc_brown2 = np.array([glob_h2 + 180, 256, 256])
+    min_bisc_brown2 = np.array([glob_lowH + 170, glob_lowS, glob_lowV])
+    max_bisc_brown2 = np.array([glob_highH + 180, 256, 256])
     mask2 = cv2.inRange(image_blur_hsv, min_bisc_brown2, max_bisc_brown2)
 
     # Combine masks
@@ -199,33 +199,33 @@ def process(image):
 
 
 def onChangeH1(x):
-    global glob_h1
-    glob_h1 = x
+    global glob_lowH
+    glob_lowH = x
 
 
 def onChangeS1(x):
-    global glob_s1
-    glob_s1 = x
+    global glob_lowS
+    glob_lowS = x
 
 
 def onChangeV1(x):
-    global glob_v1
-    glob_v1 = x
+    global glob_lowV
+    glob_lowV = x
 
 
 def onChangeH2(x):
-    global glob_h2
-    glob_h2 = x
+    global glob_highH
+    glob_highH = x
 
 
 def onChangeS2(x):
-    global glob_s2
-    glob_s2 = x
+    global glob_highS
+    glob_highS = x
 
 
 def onChangeV2(x):
-    global glob_v2
-    glob_v2 = x
+    global glob_highV
+    glob_highV = x
 
 enabled_tracker = True
 def main():
@@ -240,13 +240,13 @@ def main():
     cv2.namedWindow("Video")
     # create trackbars for color change
     if enabled_tracker:
-        cv2.createTrackbar('H1', 'Video', glob_h1, 359, onChangeH1)
-        cv2.createTrackbar('S1', 'Video', glob_s1, 256, onChangeS1)
-        cv2.createTrackbar('V1', 'Video', glob_v1, 256, onChangeV1)
+        cv2.createTrackbar('H1', 'Video', glob_lowH, 359, onChangeH1)
+        cv2.createTrackbar('S1', 'Video', glob_lowS, 256, onChangeS1)
+        cv2.createTrackbar('V1', 'Video', glob_lowV, 256, onChangeV1)
 
-        cv2.createTrackbar('H2', 'Video', glob_h2, 359, onChangeH2)
-        cv2.createTrackbar('S2', 'Video', glob_s2, 256, onChangeS2)
-        cv2.createTrackbar('V2', 'Video', glob_v2, 256, onChangeV2)
+        cv2.createTrackbar('H2', 'Video', glob_highH, 359, onChangeH2)
+        cv2.createTrackbar('S2', 'Video', glob_highS, 256, onChangeS2)
+        cv2.createTrackbar('V2', 'Video', glob_highV, 256, onChangeV2)
     
 
     firstCapture = True

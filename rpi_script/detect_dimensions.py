@@ -2,7 +2,7 @@ import get_dim_front as gdf
 import get_dim_top as gdt
 from disable_enable_print import *
 
-def get_whl(img_dict,fport,rport,tport):
+def get_whl(img_dict,config_data,fport,rport,tport):
     logging.debug("Processing For Dimensions...")
     # camera_port_front = 0 #img_front
     # camera_port_rear = 1 #img_rear

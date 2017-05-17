@@ -126,19 +126,19 @@ def write_config():
 
 
 """
-        glob_h1 = 0
-        glob_h2 = 240
+        glob_lowH = 0
+        glob_highH = 240
 
-        # glob_s1 = 10
-        glob_s1 = 0
-        glob_s2 = 180
+        # glob_lowS = 10
+        glob_lowS = 0
+        glob_highS = 180
 
-        glob_v1 = 44
-        glob_v2 = 256
+        glob_lowV = 44
+        glob_highV = 256
 """
 
 #MAIN IS MAIN
 if __name__ == '__main__':
     process_config()
     # write_config()
-    print config_data['type2']['get_color']['front']
+    print config_data['type2']

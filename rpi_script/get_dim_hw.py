@@ -15,9 +15,14 @@ def midpoint(ptA, ptB):
 ref_width = 20.8
 def get(image):
     logging.debug ('Inside...%s',__name__)
-    print "Config Data: ",config_data
+    # print "Config Data: ",config_data
     # util_show_image('original', image, 0, 1, True)
     util_write_image('debug_get_dim_hw_input.jpg',image)
+
+    image = None
+
+    image = cv2.imread('debug_get_dim_hw_input.jpg')
+
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = image
     gray = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -40,9 +45,11 @@ def get(image):
 
     # loop over the contours individually
     _count = 0
+    dimA = dimB = -1
+    lastDimA = lastDimB = -1
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
-        if cv2.contourArea(c) < 50:
+        if cv2.contourArea(c) < 1000:   #VARIES
             continue
 
         # compute the rotated bounding box of the contour
@@ -109,14 +116,27 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)
-        if _count == 0:
-            _count = _count + 1
+        # util_show_image("Result After Dimension Finding", orig, 0)    #DEBUG_TRY
+        print "H: %s, W: %s"%(round(dimA,2), round(dimB,2))
+        if lastDimA > dimA and lastDimB > dimB:
             continue
-        return round(dimA,2), round(dimB,2)
+        
+        lastDimA = dimA
+        lastDimB = dimB
+
+    h = w = -1
+
+    if round(lastDimA,2) < round(lastDimB,2):
+        h = round(lastDimA,2)
+        w = round(lastDimB,2)
+    else:
+        h = round(lastDimB,2)
+        w = round(lastDimA,2)
+        
+    print "output H: %s, W: %s"%(round(lastDimA,2), round(lastDimB,2))
+    return round(lastDimA,2), round(lastDimB,2)
 
 if __name__ == '__main__':
     img_path = 'debug_get_dim_hw_input.jpg' #front
     img = cv2.imread(img_path) 
     h,w = get(img)
-    print "H: %s, W: %s"%(h,w)

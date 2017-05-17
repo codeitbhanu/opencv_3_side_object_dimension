@@ -8,13 +8,13 @@ green = (0, 255, 0)
 # import cv2
 # import numpy as np
 
-glob_H1 = 0
+glob_lowH = 0
 glib_H2 = 50
 
-glob_S1 = 20
+glob_lowS = 20
 glib_S2 = 150
 
-glob_V1 = 100
+glob_lowV = 100
 glib_V2 = 250
 
 def nothing(x):

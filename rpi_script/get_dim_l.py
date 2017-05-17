@@ -15,9 +15,15 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 20
+ref_width = 17 #VARIES
 def get(image):
+    # util_show_image('input: get_dim_l', image, 0)
     util_write_image('debug_get_dim_l_input.jpg',image)
+
+    image = None
+
+    image = cv2.imread('debug_get_dim_l_input.jpg')
+
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = image
     gray = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -40,9 +46,11 @@ def get(image):
 
     # loop over the contours individually
     _count = 0
+    dimA = dimB = -1
+    lastDimA = lastDimB = -1
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
-        if cv2.contourArea(c) < 40:
+        if cv2.contourArea(c) < 10: #VARIES
             continue
 
         # compute the rotated bounding box of the contour
@@ -109,14 +117,18 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)
-        if _count == 0:
-            _count = _count + 1
+        util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
+        print "L1: %s, L2: %s"%(round(dimA,2), round(dimB,2))
+        if (lastDimA > dimA) and (lastDimB > dimB):
             continue
-    return round(dimA,2), round(dimB,2)
+        
+        lastDimA = dimA
+        lastDimB = dimB
+    print "output L1: %s, L2: %s"%(round(lastDimA,2), round(lastDimB,2))
+    return round(lastDimA,2), round(lastDimB,2)
 
 if __name__ == '__main__':
-    img_path = 'img_webcam/2.jpg' #front
+    img_path = 'debug_get_dim_l_input.jpg' #top
     img = cv2.imread(img_path) 
-    h,w = get(img)
-    print "H: %s, W: %s"%(h,w)
+    l1,l2 = get(img)
+    

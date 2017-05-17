@@ -10,7 +10,7 @@ def get(img_path,config_data):
     logging.debug ('Inside...%s',__name__)
     logging.debug ("FrontImagePath: %s",img_path)
     ret_img = image_preprocessor.run(img_path,config_data,'front')
-    # util_show_image('Preprocessed_Front_Image',ret_img)
+    # util_show_image('Preprocessed_Front_Image',ret_img)   #DEBUG_TRY
 
     h,w = get_dim_hw.get(ret_img)
 
