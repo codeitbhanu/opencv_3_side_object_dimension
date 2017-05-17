@@ -2,9 +2,9 @@
     "type1": {
         "img_proc": {
             "front": {
-                "highS": 140,
+                "highS": 98,
                 "lowH": 0,
-                "highV": 256,
+                "highV": 220,
                 "lowV": 0,
                 "highH": 180,
                 "lowS": 0

@@ -15,7 +15,7 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 17 #VARIES
+ref_width = 21 #VARIES
 def get(image):
     # util_show_image('input: get_dim_l', image, 0)
     util_write_image('debug_get_dim_l_input.jpg',image)
@@ -50,7 +50,7 @@ def get(image):
     lastDimA = lastDimB = -1
     for c in cnts:
         # if the contour is not sufficiently large, ignore it
-        if cv2.contourArea(c) < 10: #VARIES
+        if cv2.contourArea(c) < 2: #VARIES
             continue
 
         # compute the rotated bounding box of the contour
@@ -117,7 +117,7 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
+        # util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
         print "L1: %s, L2: %s"%(round(dimA,2), round(dimB,2))
         if (lastDimA > dimA) and (lastDimB > dimB):
             continue

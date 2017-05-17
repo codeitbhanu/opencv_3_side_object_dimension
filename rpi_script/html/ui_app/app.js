@@ -30,16 +30,16 @@ var myFunction = function() {
             }
         }
     };
-    // xhttp.open("GET", "http://192.168.225.106:5000/run", true);
-    xhttp.open("GET", "http://127.0.0.1:5000/run", true);
+    xhttp.open("GET", "http://192.168.225.106:5000/run", true);
+    // xhttp.open("GET", "http://127.0.0.1:5000/run", true);
     xhttp.send();
 }
 
 var myJQueryFunction = function() {
     console.log("Sending Request to Server...")
     $.ajax({
-        // url: "http://192.168.225.106:5000/run",
-        url: "http://127.0.0.1:5000/run",
+        url: "http://192.168.225.106:5000/run",
+        // url: "http://127.0.0.1:5000/run",
         crossDomain: true,
         beforeSend: function(client) {
             //Authorization: "Basic " + btoa(username + ":" + password);

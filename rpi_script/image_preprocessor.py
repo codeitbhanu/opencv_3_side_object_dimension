@@ -245,7 +245,7 @@ if __name__ == '__main__':
     config_data = process_config()
     config_data = config_data['type1']
 
-    main('img_local/2.jpg',config_data, 'top')
+    main('img_webcam/0.jpg',config_data, 'front')
     # main('img_local/1.jpg',config_data,'top')
     # run('img_local/2.jpg',config_data,'front')
     # run('img_local/1.jpg',config_data, 'top')
