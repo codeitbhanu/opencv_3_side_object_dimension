@@ -20,7 +20,7 @@ from configuration import *
 
 
 app = Flask(__name__)
-
+    
 @app.route('/')
 def root():
     return 'It works!!'

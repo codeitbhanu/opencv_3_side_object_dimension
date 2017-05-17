@@ -5,9 +5,9 @@ from webcolors import *
 def get_color(img_dict, config_data, fport, rport, tport, profile=0):
     logging.debug ("Processing For Color...")
 
-    fr,fg,fb = gc.get(img_dict[fport], config_data, profile, imgType='front')
+    result_image, fr,fg,fb = gc.get(img_dict[fport], config_data, profile, imgType='front')
     fcode = str(rgb_to_hex((fr,fg,fb)))
-    rr,rg,rb = gc.get(img_dict[rport], config_data, profile, imgType='rear')
+    result_image, rr,rg,rb = gc.get(img_dict[rport], config_data, profile, imgType='rear')
     rcode = str(rgb_to_hex((rr,rg,rb)))
     
     return {'front':{'r':str(fr),

@@ -226,12 +226,12 @@ def get_color_code(image):
     # logging.debug(average_color_img)
     # cv2.imwrite( "average_color.png", average_color_img )
     
-    # util_show_image('average_color.png',average_color_img)
+    # util_show_image('average_color.png',average_color_img)  #DEBUG_TRY
     return average_color
 
 
-enabled_tracker = False
-def find_color(img_path, clr_profile=0):
+enabled_tracker = False #DEBUG_TRY
+def find_color(img_path, imgType='unknown', clr_profile=0):
     # create trackbars for color change
     global glob_lowH
     global glob_highH
@@ -252,7 +252,7 @@ def find_color(img_path, clr_profile=0):
 
     firstCapture = True
     while firstCapture:
-        firstCapture = False
+        firstCapture = False    #DEBUG_TRY
         # sleep(0.100)
         # f, img = video.read()
         f = True
@@ -295,6 +295,10 @@ def find_color(img_path, clr_profile=0):
 
         # TODO: To Add More Color Picking Profile Support
         # TODO: Add Logic to Pick Color Except Black
+        if not imgType == 'rear':
+            result = util_invert_image(result)
+        debug_file_name = 'debug_get_color_'+str(imgType)+'.jpg'
+        util_write_image(debug_file_name, result)
         b = g = r = 0
         if clr_profile == 0:
             b,g,r = get_color_code(result)
@@ -305,7 +309,7 @@ def find_color(img_path, clr_profile=0):
         if imageType == 'rear':
             result = util_rotate_image(result,-2)
         
-
+        #DEBUG_TRY
         """
         cv2.imshow('Video', result)
 
@@ -320,7 +324,7 @@ def find_color(img_path, clr_profile=0):
         if not f:
             return
         """
-        return r,g,b
+        return result,r,g,b
         
 
 def get(img_path, config_data, clr_profile=0, imgType=None):
@@ -346,7 +350,7 @@ def get(img_path, config_data, clr_profile=0, imgType=None):
         glob_lowV = config_data['get_color']['front']['lowV']
         glob_highV = config_data['get_color']['front']['highV']
 
-        result =  find_color(img_path, clr_profile)
+        result,r,g,b =  find_color(img_path, imgType, clr_profile)
         # h,w,d = result.shape
         # result = util_crop_image(result,0,w,20,h-20)
         # result = util_rotate_image(result,3)
@@ -364,15 +368,16 @@ def get(img_path, config_data, clr_profile=0, imgType=None):
 
         # imgH, imgW, imgD = img.shape
         # img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
-        result =  find_color(img_path, clr_profile)
+        result,r,g,b =  find_color(img_path, imgType, clr_profile)
         # util_show_image('output:result',result)
         # result = cv2.flip(result,1)
 
 
-    return result
+    return result,r,g,b
 
 if __name__ == '__main__':
     config_data = process_config()
     config_data = config_data['type1']
 
-    get('img_local/2.jpg',config_data, 0,'front')
+    # get('img_local/0.jpg',config_data, 0,'front')
+    get('img_local/1.jpg',config_data, 0,'rear')
