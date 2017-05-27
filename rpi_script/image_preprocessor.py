@@ -73,6 +73,31 @@ def rectangle_contour(image, contour):
     cv2.drawContours(image_with_rect, [box.astype("int")], -1, (0, 255, 0), 1)
     return image_with_rect
 
+def contour_to_rectangle (img, image_type):
+    gray = img #assumed black and white image as input
+    # cv2.imshow("mask_clean",mask_clean)
+
+    if image_type == 'front':
+        gray = util_rotate_image(gray,-43)
+    if image_type == 'top':
+        gray = util_rotate_image(gray,0)
+
+    # img = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gray = cv2.medianBlur(gray,3)
+
+    ret,thresh = cv2.threshold(gray,1,255,0)
+    contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    for c in contours:
+        rect = cv2.boundingRect(c)
+        # print rect
+        if rect[2] < 10 or rect[3] < 10: continue
+        # print cv2.contourArea(c)
+        x,y,w,h = rect
+        cv2.rectangle(gray,(x,y),(x+w,y+h),(255,255,255),-1)
+        # cv2.putText(img,'Moth Detected',(x+w+10,y+h),0,0.3,(0,255,0))
+    # cv2.imshow("Show",img)
+    return gray
+
 
 def process(image):
     
@@ -82,6 +107,8 @@ def process(image):
     global glob_highS
     global glob_lowV
     global glob_highV
+
+    image_orig = image.copy()
 
     image = cv2.resize(image, None, fx=1 / 4, fy=1 / 4)
     #image = cv2.resize(image, None, fx=1 / 2, fy=1 / 2)
@@ -110,6 +137,7 @@ def process(image):
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
     mask_closed = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
     mask_clean = cv2.morphologyEx(mask_closed, cv2.MORPH_OPEN, kernel)
+
     return mask_clean
 
 def onChangeH1(x):
@@ -151,12 +179,25 @@ def main(img_path,config_data, image_type):
     global glob_lowV
     global glob_highV
 
-    glob_lowH = 0
-    glob_highH = 180
-    glob_lowS = 0 #!CAUTION
-    glob_highS = 98
-    glob_lowV = 0
-    glob_highV = 256
+    if image_type == 'front':
+        glob_lowH = config_data['img_proc']['front']['lowH']
+        glob_highH = config_data['img_proc']['front']['highH']
+
+        glob_lowS = config_data['img_proc']['front']['lowS']
+        glob_highS = config_data['img_proc']['front']['highS']
+
+        glob_lowV = config_data['img_proc']['front']['lowV']
+        glob_highV = config_data['img_proc']['front']['highV']
+        
+    elif image_type == 'top':
+        glob_lowH = config_data['img_proc']['top']['lowH']
+        glob_highH = config_data['img_proc']['top']['highH']
+
+        glob_lowS = config_data['img_proc']['top']['lowS']
+        glob_highS = config_data['img_proc']['top']['highS']
+
+        glob_lowV = config_data['img_proc']['top']['lowV']
+        glob_highV = config_data['img_proc']['top']['highV']
 
     cv2.namedWindow("Video")
     # create trackbars for color change
@@ -182,7 +223,7 @@ def main(img_path,config_data, image_type):
             cv2.imwrite('bisc.jpg',img)
         """
         result = process(img)
-
+        result = contour_to_rectangle(result,image_type) 
         # result = util_rotate_image(result,-45)
         cv2.imshow('Video', result)
 
@@ -212,7 +253,7 @@ def run(img_path,config_data,image_type):
         glob_lowH = config_data['img_proc']['front']['lowH']
         glob_highH = config_data['img_proc']['front']['highH']
 
-        logging.debug('glob_lowH: %s, glob_highH: %s',glob_lowH,glob_highH)
+        # logging.debug('glob_lowH: %s, glob_highH: %s',glob_lowH,glob_highH)
 
         glob_lowS = config_data['img_proc']['front']['lowS']
         glob_highS = config_data['img_proc']['front']['highS']
@@ -220,9 +261,7 @@ def run(img_path,config_data,image_type):
         glob_lowV = config_data['img_proc']['front']['lowV']
         glob_highV = config_data['img_proc']['front']['highV']
         result = process(img)
-        # h,w,d = result.shape
-        # result = util_crop_image(result,0,w,20,h-20)
-        result = util_rotate_image(result,-43)
+        result = contour_to_rectangle(result,image_type) 
         # util_show_image('output:result',result)
 
     elif image_type == 'top':
@@ -237,6 +276,7 @@ def run(img_path,config_data,image_type):
         imgH, imgW, imgD = img.shape
         img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result = process(img)
+        result = contour_to_rectangle(result,image_type) 
         # util_show_image('output:result',result)
         # result = cv2.flip(result,1)
     return result
@@ -244,8 +284,9 @@ def run(img_path,config_data,image_type):
 if __name__ == '__main__':
     config_data = process_config()
     config_data = config_data['type1']
+    # print config_data
 
-    main('img_webcam/0.jpg',config_data, 'front')
-    # main('img_local/1.jpg',config_data,'top')
-    # run('img_local/2.jpg',config_data,'front')
-    # run('img_local/1.jpg',config_data, 'top')
+    # main('img_local/2.jpg',config_data, 'front')
+    run('img_local/2.jpg',config_data, 'front')
+    # main('img_local/0.jpg',config_data, 'top')
+    run('img_local/0.jpg',config_data, 'top')
