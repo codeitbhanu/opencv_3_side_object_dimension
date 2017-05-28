@@ -73,6 +73,39 @@ def rectangle_contour(image, contour):
     cv2.drawContours(image_with_rect, [box.astype("int")], -1, (0, 255, 0), 1)
     return image_with_rect
 
+def shape_padding(img, padding = 20):
+    shape=img.shape
+    print "shape_padding ",shape
+    w=shape[1]
+    h=shape[0]
+
+    base_size=h+padding,w+padding
+    #make a 3 channel image for base which is slightly larger than target img
+    base=np.zeros(base_size,dtype=np.uint8)
+    cv2.rectangle(base,(0,0),(w+padding,h+padding),(0,0),padding)#really thick white rectangle
+    base[padding/2:h+padding/2,padding/2:w+padding/2]=img #this works
+
+    return base
+
+def shape_transform(img, image_type):
+    # input should be 4 points within image size range
+    # returns the same image with transformed / caged transformed in my language
+    rows, cols, ch = img.shape
+
+    ratio = cols / 640.0    
+    # ratio = 0.5
+    # print img.shape
+    pts1 = np.float32([[0,0],[cols,0],[0,rows],[cols,rows]])
+    if image_type == 'top':
+        pts1 = np.float32([[76*ratio,0*ratio],[566*ratio,0*ratio],[0*ratio,443*ratio],[637*ratio,454*ratio]])
+    pts2 = np.float32([[0,0],[cols,0],[0,rows+10],[cols+10,rows+10]])
+
+    M = cv2.getPerspectiveTransform(pts1,pts2)
+    dst = cv2.warpPerspective(img, M, (cols, rows))
+    # dst = cv2.resize(dst, None, fx=1 / 2, fy=1 / 2)
+    # util_show_image('result after shape_transform',dst)
+    return dst
+
 def contour_to_rectangle (img, image_type):
     gray = img #assumed black and white image as input
     # cv2.imshow("mask_clean",mask_clean)
@@ -212,10 +245,11 @@ def main(img_path,config_data, image_type):
     
 
     firstCapture = True
+    img = cv2.imread(img_path)
+    img = shape_transform(img, image_type)
     while True:
         # f, img = video.read()
         f = True 
-        img = cv2.imread(img_path)    
 
         """
         if firstCapture:
@@ -224,6 +258,7 @@ def main(img_path,config_data, image_type):
         """
         result = process(img)
         result = contour_to_rectangle(result,image_type) 
+        result = shape_padding(result)
         # result = util_rotate_image(result,-45)
         cv2.imshow('Video', result)
 
@@ -248,7 +283,10 @@ def run(img_path,config_data,image_type):
     # logging.debug('config_data: %s'%(config_data['img_proc']))
 	
     result = ""
-    img = cv2.imread(img_path)    
+    img = cv2.imread(img_path)
+
+    img = shape_transform(img, image_type)
+
     if image_type == 'front':
         glob_lowH = config_data['img_proc']['front']['lowH']
         glob_highH = config_data['img_proc']['front']['highH']
@@ -262,6 +300,7 @@ def run(img_path,config_data,image_type):
         glob_highV = config_data['img_proc']['front']['highV']
         result = process(img)
         result = contour_to_rectangle(result,image_type) 
+        result = shape_padding(result)
         # util_show_image('output:result',result)
 
     elif image_type == 'top':
@@ -277,6 +316,7 @@ def run(img_path,config_data,image_type):
         img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result = process(img)
         result = contour_to_rectangle(result,image_type) 
+        result = shape_padding(result)
         # util_show_image('output:result',result)
         # result = cv2.flip(result,1)
     return result
@@ -287,6 +327,7 @@ if __name__ == '__main__':
     # print config_data
 
     # main('img_local/2.jpg',config_data, 'front')
-    run('img_local/2.jpg',config_data, 'front')
-    # main('img_local/0.jpg',config_data, 'top')
-    run('img_local/0.jpg',config_data, 'top')
+    # run('img_local/2.jpg',config_data, 'front')
+    # run('bugfix_images/0.10.jpg',config_data, 'top')
+    run('bugfix_images/0.20.jpg',config_data, 'top')
+    # run('img_local/0.jpg',config_data, 'top')

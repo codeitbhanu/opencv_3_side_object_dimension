@@ -15,7 +15,7 @@ camera_port_top = 0 #img_top
 
 clr_profile = 0
 
-global config_data
+global config_data 
 
 if __name__ == '__main__':
     # werkzeug_server.run_server('enp0s26u1u1')

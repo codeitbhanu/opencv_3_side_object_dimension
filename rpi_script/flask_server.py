@@ -6,6 +6,7 @@ import capture
 from flask import jsonify
 import json
 import process_images
+import platform
 
 camera_port_front = 2 #img_front       #DEBUG_TRY
 camera_port_rear = 1 #img_rear
@@ -79,7 +80,12 @@ def run():
         return execute(belt)
 
 
+PLATFORM_MACHINE = platform.machine()
+
 onLocalHost = False
+if PLATFORM_MACHINE is not 'armv7l':
+    onLocalHost = True
+
 if __name__ == '__main__':
     if onLocalHost == False:
         intf = 'wlan0'

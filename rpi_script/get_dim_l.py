@@ -117,7 +117,7 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
+        util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
         print "L1: %s, L2: %s"%(round(dimA,2), round(dimB,2))
         if (lastDimA > dimA) and (lastDimB > dimB):
             continue
@@ -126,6 +126,7 @@ def get(image):
         lastDimB = dimB
     print "output L1: %s, L2: %s"%(round(lastDimA,2), round(lastDimB,2))
     return round(lastDimA,2), round(lastDimB,2)
+    # return round(dimB,2), round(dimB,2)
 
 if __name__ == '__main__':
     img_path = 'debug_get_dim_l_input.jpg' #top
