@@ -119,7 +119,8 @@ def contour_to_rectangle (img, image_type):
     gray = cv2.medianBlur(gray,3)
 
     ret,thresh = cv2.threshold(gray,1,255,0)
-    contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    _, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #RPI
     for c in contours:
         rect = cv2.boundingRect(c)
         # print rect

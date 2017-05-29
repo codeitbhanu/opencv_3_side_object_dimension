@@ -15,7 +15,7 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 21 #VARIES
+ref_width = 27.5 #VARIES
 def get(image):
     # util_show_image('input: get_dim_l', image, 0)
     util_write_image('debug_get_dim_l_input.jpg',image)
@@ -109,15 +109,15 @@ def get(image):
         dimB = dB / pixelsPerMetric
 
         # draw the object sizes on the image
-        cv2.putText(orig, "{:.1f}in".format(dimA),
+        cv2.putText(orig, "{:.1f}mm".format(dimA),
             (int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
             0.65, (255, 255, 255), 2)
-        cv2.putText(orig, "{:.1f}in".format(dimB),
+        cv2.putText(orig, "{:.1f}mm".format(dimB),
             (int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
+        # util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
         print "L1: %s, L2: %s"%(round(dimA,2), round(dimB,2))
         if (lastDimA > dimA) and (lastDimB > dimB):
             continue

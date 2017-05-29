@@ -12,7 +12,7 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 20.8
+ref_width = 23.5
 def get(image):
     logging.debug ('Inside...%s',__name__)
     # print "Config Data: ",config_data
@@ -108,10 +108,10 @@ def get(image):
         dimB = dB / pixelsPerMetric
 
         # draw the object sizes on the image
-        cv2.putText(orig, "{:.1f}in".format(dimA),
+        cv2.putText(orig, "{:.1f}mm".format(dimA),
             (int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
             0.65, (255, 255, 255), 2)
-        cv2.putText(orig, "{:.1f}in".format(dimB),
+        cv2.putText(orig, "{:.1f}mm".format(dimB),
             (int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
             0.65, (255, 255, 255), 2)
 

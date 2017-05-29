@@ -4,14 +4,14 @@ import platform
 
 from disable_enable_print import *
 
-capture_from_camera = False
+capture_from_camera = True
 
 laptop_capture = False
 
 PLATFORM_MACHINE = platform.machine()
 
 led_enabled = False
-if PLATFORM_MACHINE is 'armv7l':
+if PLATFORM_MACHINE == 'armv7l':
     led_enabled = True
 else:
     led_enabled = False

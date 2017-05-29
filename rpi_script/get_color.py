@@ -47,7 +47,7 @@ def find_biggest_contour(image):
     
     # Copy
     image = image.copy()
-    if PLATFORM_MACHINE is 'armv7l':
+    if PLATFORM_MACHINE == 'armv7l':
         _,contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #RPI
     else:
         contours, hierarchy = cv2.findContours(image, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -282,7 +282,7 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
         # cv2.imwrite('example.jpg',result)
         gray=cv2.cvtColor(result,cv2.COLOR_BGR2GRAY)
         edged = cv2.Canny(result, 10, 250)
-        if PLATFORM_MACHINE is 'armv7l':
+        if PLATFORM_MACHINE == 'armv7l':
             (_,cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) #RPI
         else:
             (cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
