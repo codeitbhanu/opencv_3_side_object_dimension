@@ -4,7 +4,7 @@ import platform
 
 from disable_enable_print import *
 
-capture_from_camera = True
+capture_from_camera = False
 
 laptop_capture = False
 

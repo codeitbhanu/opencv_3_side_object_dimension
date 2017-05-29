@@ -4,6 +4,7 @@ import cv2
 import numpy as np
 from imutils import perspective
 import imutils
+import platform
 
 from disable_enable_print import *
 from configuration import *
@@ -17,6 +18,8 @@ glob_highS = -1
 
 glob_lowV = -1
 glob_highV = -1
+
+PLATFORM_MACHINE = platform.machine()
 
 def overlay_mask(mask, image):
     rgb_mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2RGB)
@@ -119,8 +122,11 @@ def contour_to_rectangle (img, image_type):
     gray = cv2.medianBlur(gray,3)
 
     ret,thresh = cv2.threshold(gray,1,255,0)
-    # contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    _, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #RPI
+    if PLATFORM_MACHINE == 'armv7l':
+        _, contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE) #RPI
+    else:
+        contours, _ = cv2.findContours(thresh, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        
     for c in contours:
         rect = cv2.boundingRect(c)
         # print rect
