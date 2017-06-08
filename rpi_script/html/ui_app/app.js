@@ -30,26 +30,26 @@ var myFunction = function() {
             }
         }
     };
-    xhttp.open("GET", "http://192.168.225.106:5000/run", true);
-    // xhttp.open("GET", "http://127.0.0.1:5000/run", true);
+    // xhttp.open("GET", "http://192.168.225.106:5000/run", true);
+    xhttp.open("GET", "http://127.0.0.1:5000/run", true);
     xhttp.send();
 }
 
 var myJQueryFunction = function() {
     console.log("Sending Request to Server...")
     $.ajax({
-        url: "http://192.168.225.106:5000/run",
-        // url: "http://127.0.0.1:5000/run",
+        // url: "http://192.168.225.106:5000/run",
+        url: "http://127.0.0.1:5000/run",
         crossDomain: true,
         beforeSend: function(client) {
             //Authorization: "Basic " + btoa(username + ":" + password);
             client.setRequestHeader('Authorization');
-            client.setRequestHeader('Access-Control-Allow-Origin','*');
+            client.setRequestHeader('Access-Control-Allow-Origin', '*');
         },
-        success: function(result){
-        try {
+        success: function(result) {
+            try {
                 data = JSON.parse(result)
-                // data = JSON.parse(this.responseText)
+                    // data = JSON.parse(this.responseText)
                     // console.log("color: " + data.color.front.code)
 
                 var dimensions = data.dimensions;
@@ -78,7 +78,7 @@ var myJQueryFunction = function() {
 
 
 
-$(document).ready(function(){
+$(document).ready(function() {
     // $("button").click(function(){
     //     $.ajax({url: "demo_test.txt", success: function(result){
     //         $("#div1").html(result);

@@ -4,6 +4,8 @@ from flask import Flask, redirect, url_for, request
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 import capture
 from flask import jsonify
+from flask.ext.cors import CORS, cross_origin
+#https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask-and-heroku
 import json
 import process_images
 import platform
@@ -21,11 +23,13 @@ from configuration import *
 
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
     
+@cross_origin()
 @app.route('/')
 def root():
     return 'It works!!'
-
 
 @app.route('/execute/<name>')
 def execute(belt):
@@ -82,10 +86,10 @@ def run():
 
 PLATFORM_MACHINE = platform.machine()
 
-onLocalHost = True
+onLocalHost = False
 print PLATFORM_MACHINE
 if PLATFORM_MACHINE is not 'armv7l':
-    onLocalHost = False
+    onLocalHost = True
 
 if __name__ == '__main__':
     if onLocalHost == False:
