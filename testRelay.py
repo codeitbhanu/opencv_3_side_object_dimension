@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # For Loop 3 Camera Run
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("opt", "--option", required=True,
+    ap.add_argument("-opt", "--option", required=True,
                     help="Usage: exe opt [on/off/pulse]")
     args = vars(ap.parse_args())
 
