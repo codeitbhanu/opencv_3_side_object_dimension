@@ -4,7 +4,8 @@ from flask import Flask, redirect, url_for, request
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-
 import capture
 from flask import jsonify
-from flask.ext.cors import CORS, cross_origin
+# from flask.ext.cors import CORS, cross_origin
+from flask_cors import CORS, cross_origin
 #https://stackoverflow.com/questions/25594893/how-to-enable-cors-in-flask-and-heroku
 import json
 import process_images
@@ -32,9 +33,10 @@ def root():
     return 'It works!!'
 
 @app.route('/execute/<name>')
-def execute(belt):
+def execute(belt, biscuit):
     global config_data
     logging.info('*** Started Executing For Belt: %s ***', belt)
+    logging.info('*** Started Executing For Biscuit: %s ***', biscuit)
     config_data = process_config()
     config_data = config_data['type1']
     # logging.debug ("Config Data: %s"%(config_data['type1'])
@@ -74,14 +76,19 @@ def run():
     logging.info('Got Call From Client')
     if request.method == 'POST':
         belt = request.form['belt']
+        biscuit = request.form['biscuit']
         logging.debug('##### BELT: %s #####', belt)
+        logging.debug('##### Biscuit: %s #####', biscuit)
         # return redirect(url_for('execute', name=user))
-        return execute(belt)
+        return execute(belt,biscuit)
     else:
+        logging.debug(request.args);
         belt = request.args.get('belt')
-        logging.info('##### BELT: %s #####', belt)
+        biscuit = request.args.get('biscuit')
+        logging.debug('##### BELT: %s #####', belt)
+        logging.debug('##### Biscuit: %s #####', biscuit)
         # return redirect(url_for('execute', name=user))
-        return execute(belt)
+        return execute(belt,biscuit)
 
 
 PLATFORM_MACHINE = platform.machine()
