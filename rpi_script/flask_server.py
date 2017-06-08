@@ -93,10 +93,10 @@ def run():
 
 PLATFORM_MACHINE = platform.machine()
 
-onLocalHost = False
+onLocalHost = True
 print PLATFORM_MACHINE
 if PLATFORM_MACHINE is not 'armv7l':
-    onLocalHost = True
+    onLocalHost = False
 
 if __name__ == '__main__':
     if onLocalHost == False:
