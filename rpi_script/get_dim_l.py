@@ -18,11 +18,11 @@ def midpoint(ptA, ptB):
 ref_width = 27.5 #VARIES
 def get(image):
     # util_show_image('input: get_dim_l', image, 0)
-    util_write_image('debug_get_dim_l_input.jpg',image)
+    util_write_image('debug_get_dim_l_input.png',image)
 
     image = None
 
-    image = cv2.imread('debug_get_dim_l_input.jpg')
+    image = cv2.imread('debug_get_dim_l_input.png')
 
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = image
@@ -117,7 +117,7 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)  #DEBUG_TRY
+        util_write_image("debug_result_after_dimension_l_finding.png", orig)  #DEBUG_TRY
         print "L1: %s, L2: %s"%(round(dimA,2), round(dimB,2))
         if (lastDimA > dimA) and (lastDimB > dimB):
             continue
@@ -129,7 +129,7 @@ def get(image):
     # return round(dimB,2), round(dimB,2)
 
 if __name__ == '__main__':
-    img_path = 'debug_get_dim_l_input.jpg' #top
+    img_path = 'debug_img_preproc_top_rectangles.png' #top
     img = cv2.imread(img_path) 
     l1,l2 = get(img)
     

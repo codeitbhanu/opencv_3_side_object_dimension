@@ -17,11 +17,11 @@ def get(image):
     logging.debug ('Inside...%s',__name__)
     # print "Config Data: ",config_data
     # util_show_image('original', image, 0, 1, True)
-    util_write_image('debug_get_dim_hw_input.jpg',image)
+    util_write_image('debug_get_dim_hw_input.png',image)
 
     image = None
 
-    image = cv2.imread('debug_get_dim_hw_input.jpg')
+    image = cv2.imread('debug_get_dim_hw_input.png')
 
     # gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     gray = image
@@ -116,7 +116,7 @@ def get(image):
             0.65, (255, 255, 255), 2)
 
         # show the output image
-        # util_show_image("Result After Dimension Finding", orig, 0)    #DEBUG_TRY
+        util_write_image("debug_result_after_dimension_hw_finding.png", orig)    #DEBUG_TRY
         print "H: %s, W: %s"%(round(dimA,2), round(dimB,2))
         if lastDimA > dimA and lastDimB > dimB:
             continue
@@ -137,6 +137,6 @@ def get(image):
     return round(lastDimA,2), round(lastDimB,2)
 
 if __name__ == '__main__':
-    img_path = 'debug_get_dim_hw_input.jpg' #front
+    img_path = 'debug_img_preproc_front_rectangles.png' #front
     img = cv2.imread(img_path) 
     h,w = get(img)

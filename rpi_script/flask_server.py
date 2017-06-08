@@ -38,8 +38,8 @@ def execute(belt, biscuit):
     logging.info('*** Started Executing For Belt: %s ***', belt)
     logging.info('*** Started Executing For Biscuit: %s ***', biscuit)
     config_data = process_config()
-    config_data = config_data['type1']
-    # logging.debug ("Config Data: %s"%(config_data['type1'])
+    config_data = config_data[biscuit]
+    # logging.debug ("Config Data: %s"%(config_data['biscuit'])
     
     img_dict = capture.capture_images(camera_port_front,camera_port_rear,camera_port_top)
     logging.debug (img_dict)

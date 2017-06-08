@@ -174,6 +174,7 @@ def process(image):
     return mask_closed,mask_clean,box
 
 def onChangeH1(x):
+    logging.debug("onChangeH1 called")
     global glob_lowH
     glob_lowH = x
 
@@ -235,10 +236,11 @@ def get_color_code(image):
     # util_show_image('average_color.png',average_color_img)  #DEBUG_TRY
     return average_color
 
-
+# enabled_tracker = True #DEBUG_TRY
 enabled_tracker = False #DEBUG_TRY
 def find_color(img_path, imgType='unknown', clr_profile=0):
     # create trackbars for color change
+    global enabled_tracker
     global glob_lowH
     global glob_highH
     global glob_lowS
@@ -258,6 +260,7 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
 
     firstCapture = True
     while firstCapture:
+        logging.debug("In while loop...")
         firstCapture = False    #DEBUG_TRY
         # sleep(0.100)
         # f, img = video.read()
@@ -272,7 +275,8 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
         # mask_clean = cv2.dilate(mask_clean, None, iterations=2)
         mask_clean = cv2.erode(mask_clean, None, iterations=2)
 
-        img_resized = cv2.resize(img_orig, None, fx=1 / 2, fy=1 / 2)
+        # img_resized = cv2.resize(img_orig, None, fx=1 / 2, fy=1 / 2) #DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+        img_resized = cv2.resize(img, None, fx=1 / 2, fy=1 / 2)
         img_resized = util_rotate_image(img_resized,-45)
         # cv2.drawContours(img_resized, [box.astype("int")], -1, (0, 255, 0), 1)
 
@@ -303,8 +307,8 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
 
         # TODO: To Add More Color Picking Profile Support
         # TODO: Add Logic to Pick Color Except Black
-        if not imgType == 'rear':
-            result = util_invert_image(result)
+        # if not imgType == 'rear':
+        #     result = util_invert_image(result)
         debug_file_name = 'debug_get_color_'+str(imgType)+'.jpg'
         util_write_image(debug_file_name, result)
         b = g = r = 0
@@ -322,8 +326,7 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
         cv2.imshow('Video', result)
 
         # Wait for 1ms
-        key = cv2.waitKey(0) & 0xFF
-
+        key = cv2.waitKey(1) & 0xFF
         # Press escape to exit
         if key == 27:
             return
@@ -332,7 +335,7 @@ def find_color(img_path, imgType='unknown', clr_profile=0):
         if not f:
             return
         """
-        return result,r,g,b
+        return result,r,g,b #DEBUG_TRY
         
 
 def get(img_path, config_data, clr_profile=0, imgType=None):
@@ -347,7 +350,7 @@ def get(img_path, config_data, clr_profile=0, imgType=None):
     global glob_lowV
     global glob_highV
     
-    result = ""
+    result,r,b,g = "","","",""
     if imgType == 'front':
         glob_lowH = config_data['get_color']['front']['lowH']
         glob_highH = config_data['get_color']['front']['highH']
@@ -380,12 +383,11 @@ def get(img_path, config_data, clr_profile=0, imgType=None):
         # util_show_image('output:result',result)
         # result = cv2.flip(result,1)
 
-
     return result,r,g,b
 
 if __name__ == '__main__':
     config_data = process_config()
-    config_data = config_data['type1']
+    config_data = config_data['hitnrun']
 
-    # get('img_local/0.jpg',config_data, 0,'front')
-    get('img_local/1.jpg',config_data, 0,'rear')
+    # get('img_local/1.jpg',config_data, 0,'rear')
+    get('img_local/2.jpg',config_data, 0,'front')

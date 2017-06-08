@@ -1,5 +1,5 @@
 {
-    "type1": {
+    "hitnrun": {
         "img_proc": {
             "front": {
                 "highS": 65,
@@ -20,7 +20,7 @@
         },
         "get_color": {
             "front": {
-                "highS": 154,
+                "highS": 88,
                 "lowH": 0,
                 "highV": 180,
                 "lowV": 0,
@@ -28,7 +28,7 @@
                 "lowS": 0
             },
             "rear": {
-                "highS": 169,
+                "highS": 130,
                 "lowH": 0,
                 "highV": 240,
                 "lowV": 0,
@@ -37,7 +37,7 @@
             }
         }
     },
-    "type2": {
+    "dreamlite": {
         "img_proc": {
             "front": {
                 "highS": 140,

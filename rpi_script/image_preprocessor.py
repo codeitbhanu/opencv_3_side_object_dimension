@@ -264,8 +264,10 @@ def main(img_path,config_data, image_type):
             cv2.imwrite('bisc.jpg',img)
         """
         result = process(img)
+        util_write_image('debug_img_preproc_main_covershape.png',result)
         result = contour_to_rectangle(result,image_type) 
         result = shape_padding(result)
+        util_write_image('debug_img_preproc_main_rectangles.png',result)
         # result = util_rotate_image(result,-45)
         cv2.imshow('Video', result)
 
@@ -306,8 +308,10 @@ def run(img_path,config_data,image_type):
         glob_lowV = config_data['img_proc']['front']['lowV']
         glob_highV = config_data['img_proc']['front']['highV']
         result = process(img)
+        util_write_image('debug_img_preproc_front_covershape.png',result)
         result = contour_to_rectangle(result,image_type) 
         result = shape_padding(result)
+        util_write_image('debug_img_preproc_front_rectangles.png',result)
         # util_show_image('output:result',result)
 
     elif image_type == 'top':
@@ -322,19 +326,21 @@ def run(img_path,config_data,image_type):
         imgH, imgW, imgD = img.shape
         img = util_crop_image(img,0,int(imgW) - 80, 20, int(imgH) - 20)
         result = process(img)
+        util_write_image('debug_img_preproc_top_covershape.png',result)
         result = contour_to_rectangle(result,image_type) 
         result = shape_padding(result)
+        util_write_image('debug_img_preproc_top_rectangles.png',result)
         # util_show_image('output:result',result)
         # result = cv2.flip(result,1)
     return result
 
 if __name__ == '__main__':
     config_data = process_config()
-    config_data = config_data['type1']
+    config_data = config_data['hitnrun']
     # print config_data
 
-    # main('img_local/2.jpg',config_data, 'front')
+    main('img_local/2.jpg',config_data, 'front')
     # run('img_local/2.jpg',config_data, 'front')
     # run('bugfix_images/0.10.jpg',config_data, 'top')
-    run('bugfix_images/0.20.jpg',config_data, 'top')
+    # run('bugfix_images/0.20.jpg',config_data, 'top')
     # run('img_local/0.jpg',config_data, 'top')
