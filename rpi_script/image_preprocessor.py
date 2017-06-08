@@ -264,12 +264,13 @@ def main(img_path,config_data, image_type):
             cv2.imwrite('bisc.jpg',img)
         """
         result = process(img)
+        cv2.imshow('Video', result)
         util_write_image('debug_img_preproc_main_covershape.png',result)
         result = contour_to_rectangle(result,image_type) 
         result = shape_padding(result)
         util_write_image('debug_img_preproc_main_rectangles.png',result)
         # result = util_rotate_image(result,-45)
-        cv2.imshow('Video', result)
+        # cv2.imshow('Video', result)
 
         # Wait for 1ms
         key = cv2.waitKey(1) & 0xFF
@@ -295,6 +296,8 @@ def run(img_path,config_data,image_type):
     img = cv2.imread(img_path)
 
     img = shape_transform(img, image_type)
+    
+    util_write_image('debug_after_shape_transform_' + image_type + '.png',img)
 
     if image_type == 'front':
         glob_lowH = config_data['img_proc']['front']['lowH']
@@ -336,10 +339,13 @@ def run(img_path,config_data,image_type):
 
 if __name__ == '__main__':
     config_data = process_config()
-    config_data = config_data['hitnrun']
+    config_data = config_data['dreamlite']
+    # config_data = config_data['hitnrun']
+    # config_data = config_data['butterbake']
     # print config_data
 
     main('img_local/2.jpg',config_data, 'front')
+    # main('img_local/0.jpg',config_data, 'top')
     # run('img_local/2.jpg',config_data, 'front')
     # run('bugfix_images/0.10.jpg',config_data, 'top')
     # run('bugfix_images/0.20.jpg',config_data, 'top')

@@ -40,35 +40,73 @@
     "dreamlite": {
         "img_proc": {
             "front": {
-                "highS": 140,
+                "highS": 100,
                 "lowH": 0,
-                "highV": 256,
+                "highV": 240,
                 "lowV": 0,
                 "highH": 180,
                 "lowS": 0
             },
             "top": {
-                "highS": 120,
+                "highS": 130,
                 "lowH": 0,
-                "highV": 180,
+                "highV": 256,
                 "lowV": 0,
-                "highH": 104,
+                "highH": 230,
                 "lowS": 0
             }
         },
         "get_color": {
             "front": {
-                "highS": 154,
+                "highS": 100,
                 "lowH": 0,
-                "highV": 180,
+                "highV": 254,
                 "lowV": 0,
                 "highH": 134,
                 "lowS": 0
             },
             "rear": {
-                "highS": 169,
+                "highS": 167,
+                "lowH": 0,
+                "highV": 246,
+                "lowV": 0,
+                "highH": 277,
+                "lowS": 0
+            }
+        }
+    },
+    "butterbake": {
+        "img_proc": {
+            "front": {
+                "highS": 100,
                 "lowH": 0,
                 "highV": 240,
+                "lowV": 0,
+                "highH": 180,
+                "lowS": 0
+            },
+            "top": {
+                "highS": 143,
+                "lowH": 0,
+                "highV": 256,
+                "lowV": 0,
+                "highH": 200,
+                "lowS": 0
+            }
+        },
+        "get_color": {
+            "front": {
+                "highS": 79,
+                "lowH": 0,
+                "highV": 236,
+                "lowV": 0,
+                "highH": 134,
+                "lowS": 0
+            },
+            "rear": {
+                "highS": 98,
+                "lowH": 0,
+                "highV": 250,
                 "lowV": 0,
                 "highH": 193,
                 "lowS": 0
