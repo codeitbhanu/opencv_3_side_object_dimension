@@ -94,7 +94,7 @@
                 "lowV": 0,
                 "highH": 200,
                 "lowS": 0,
-                "len_mult_factor": 0.905
+                "len_mult_factor": 1.090
             }
         },
         "get_color": {
