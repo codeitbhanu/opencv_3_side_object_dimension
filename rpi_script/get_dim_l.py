@@ -15,7 +15,7 @@ from util_image import *
 def midpoint(ptA, ptB):
     return ((ptA[0] + ptB[0]) * 0.5, (ptA[1] + ptB[1]) * 0.5)
 
-ref_width = 26.3 #VARIES
+ref_width = 26.8 #VARIES
 
 def get(image):
     # util_show_image('input: get_dim_l', image, 0)

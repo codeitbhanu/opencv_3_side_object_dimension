@@ -339,8 +339,8 @@ def run(img_path,config_data,image_type):
 
 if __name__ == '__main__':
     config_data = process_config()
-    config_data = config_data['dreamlite']
-    # config_data = config_data['hitnrun']
+    # config_data = config_data['dreamlite']
+    config_data = config_data['hitnrun']
     # config_data = config_data['butterbake']
     # print config_data
 

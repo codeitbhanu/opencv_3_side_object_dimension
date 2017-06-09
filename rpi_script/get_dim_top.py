@@ -20,9 +20,12 @@ def get(img_path, config_data):
         greater = l1
     else:
         greater = l2
+        
+    len_mult_factor = config_data['img_proc']['top']['len_mult_factor']
+    final_length = len_mult_factor*greater
 
-    logging.debug ("Length: %s", greater)
-    return greater
+    logging.debug ("Length: %s", final_length)
+    return final_length
 
 if __name__ == '__main__':
     img_path = 'debug_get_dim_l_input.jpg' #front

@@ -24,7 +24,7 @@ if __name__ == '__main__':
     global config_data
     logging.debug ("...inside main loop...")
     config_data = process_config()
-    config_data = config_data['type1']
+    config_data = config_data['hitnrun']
     # logging.debug ("Config Data: %s"%(config_data['type1'])
     
     img_dict = capture.capture_images(camera_port_front,camera_port_rear,camera_port_top)

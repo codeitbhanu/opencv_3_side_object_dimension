@@ -15,7 +15,8 @@
                 "highV": 256,
                 "lowV": 0,
                 "highH": 180,
-                "lowS": 0
+                "lowS": 0,
+                "len_mult_factor": 0.905
             }
         },
         "get_color": {
@@ -53,7 +54,8 @@
                 "highV": 256,
                 "lowV": 0,
                 "highH": 230,
-                "lowS": 0
+                "lowS": 0,
+                "len_mult_factor": 0.905
             }
         },
         "get_color": {
@@ -91,7 +93,8 @@
                 "highV": 256,
                 "lowV": 0,
                 "highH": 200,
-                "lowS": 0
+                "lowS": 0,
+                "len_mult_factor": 0.905
             }
         },
         "get_color": {
