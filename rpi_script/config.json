@@ -80,11 +80,11 @@
     "butterbake": {
         "img_proc": {
             "front": {
-                "highS": 100,
+                "highS": 92,
                 "lowH": 0,
-                "highV": 240,
+                "highV": 233,
                 "lowV": 0,
-                "highH": 180,
+                "highH": 106,
                 "lowS": 0
             },
             "top": {
